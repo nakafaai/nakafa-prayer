@@ -32,7 +32,11 @@ final class ReminderAudio {
   }
 
   private func playBundledAdhan() {
-    guard let url = Bundle.main.url(forResource: "adhan", withExtension: "mp3") else {
+    let url =
+      Bundle.module.url(forResource: "adhan", withExtension: "mp3")
+      ?? Bundle.main.url(forResource: "adhan", withExtension: "mp3")
+
+    guard let url else {
       return
     }
 
