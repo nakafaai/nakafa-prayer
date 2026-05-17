@@ -1,0 +1,282 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "app.name" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nakafa Prayer" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Nakafa Prayer" } }
+      }
+    },
+    "app.no_coordinates" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set a location to calculate prayer times." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Atur lokasi untuk menghitung waktu salat." } }
+      }
+    },
+    "app.next_prayer" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next: %@ at %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Berikutnya: %@ pukul %@" } }
+      }
+    },
+    "app.quit" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Keluar" } }
+      }
+    },
+    "app.refresh_location" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Refresh Location" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Perbarui Lokasi" } }
+      }
+    },
+    "app.settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengaturan" } }
+      }
+    },
+    "app.test_lock" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Test Lock" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tes Kunci" } }
+      }
+    },
+    "language.en" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "English" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Inggris" } }
+      }
+    },
+    "language.id" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Indonesian" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Indonesia" } }
+      }
+    },
+    "language.system" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "System" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Sistem" } }
+      }
+    },
+    "lock.countdown" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ remaining" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Sisa %@" } }
+      }
+    },
+    "lock.emergency" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hold for emergency release" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tahan untuk buka darurat" } }
+      }
+    },
+    "lock.message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Step away from the laptop and pray now." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tinggalkan laptop dan salat sekarang." } }
+      }
+    },
+    "lock.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for %@ prayer" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktunya salat %@" } }
+      }
+    },
+    "method.dubai" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dubai" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Dubai" } }
+      }
+    },
+    "method.egyptian" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Egyptian Survey" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Survei Mesir" } }
+      }
+    },
+    "method.karachi" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Karachi" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Karachi" } }
+      }
+    },
+    "method.kuwait" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Kuwait" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Kuwait" } }
+      }
+    },
+    "method.moonsightingCommittee" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Moonsighting Committee" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Moonsighting Committee" } }
+      }
+    },
+    "method.muslimWorldLeague" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Muslim World League" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Muslim World League" } }
+      }
+    },
+    "method.northAmerica" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "North America" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Amerika Utara" } }
+      }
+    },
+    "method.qatar" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Qatar" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Qatar" } }
+      }
+    },
+    "method.singapore" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Singapore, Malaysia, Indonesia" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Singapura, Malaysia, Indonesia" } }
+      }
+    },
+    "method.tehran" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tehran" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tehran" } }
+      }
+    },
+    "method.turkey" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turkey" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Turki" } }
+      }
+    },
+    "method.ummAlQura" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Umm al-Qura" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Umm al-Qura" } }
+      }
+    },
+    "madhab.hanafi" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } }
+      }
+    },
+    "madhab.shafi" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shafi" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Syafii" } }
+      }
+    },
+    "prayer.asr" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Asr" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Asar" } }
+      }
+    },
+    "prayer.dhuhr" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dhuhr" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Zuhur" } }
+      }
+    },
+    "prayer.fajr" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fajr" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Subuh" } }
+      }
+    },
+    "prayer.isha" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Isha" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Isya" } }
+      }
+    },
+    "prayer.maghrib" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Maghrib" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Magrib" } }
+      }
+    },
+    "settings.adhan" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Adhan audio" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Audio adzan" } }
+      }
+    },
+    "settings.calculation" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Calculation" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Perhitungan" } }
+      }
+    },
+    "settings.language" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Bahasa" } }
+      }
+    },
+    "settings.launch_at_login" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at login" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka saat login" } }
+      }
+    },
+    "settings.latitude" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Latitude" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Lintang" } }
+      }
+    },
+    "settings.location" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Lokasi" } }
+      }
+    },
+    "settings.lock_duration" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lock duration" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Durasi kunci" } }
+      }
+    },
+    "settings.longitude" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Longitude" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Bujur" } }
+      }
+    },
+    "settings.madhab" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Asr madhab" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Mazhab Asar" } }
+      }
+    },
+    "settings.manual_coordinates" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manual coordinates" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Koordinat manual" } }
+      }
+    },
+    "settings.minutes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%d min" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "%d menit" } }
+      }
+    },
+    "settings.tts" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Spoken reminder" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat suara" } }
+      }
+    },
+    "tts.prayer_due" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for %@ prayer." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktunya salat %@." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
