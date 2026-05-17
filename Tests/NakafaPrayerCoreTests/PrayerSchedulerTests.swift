@@ -12,7 +12,7 @@ struct PrayerSchedulerTests {
             year: 2026,
             month: 5,
             day: 17,
-            hour: 23
+            hour: 20
         ))!
 
         let next = try NextPrayerResolver(
