@@ -25,7 +25,7 @@ public enum PrayerCalculationError: Error, Equatable, Sendable {
 public struct PrayerCalculator: Sendable {
     private let calendar: Calendar
 
-    public init(calendar: Calendar = .gregorianUTC) {
+    public init(calendar: Calendar = .current) {
         self.calendar = calendar
     }
 

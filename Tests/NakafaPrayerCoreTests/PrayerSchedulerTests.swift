@@ -15,7 +15,10 @@ struct PrayerSchedulerTests {
             hour: 23
         ))!
 
-        let next = try NextPrayerResolver().nextPrayer(
+        let next = try NextPrayerResolver(
+            calculator: PrayerCalculator(calendar: .gregorianUTC),
+            calendar: .gregorianUTC
+        ).nextPrayer(
             after: now,
             coordinates: coordinates,
             settings: settings

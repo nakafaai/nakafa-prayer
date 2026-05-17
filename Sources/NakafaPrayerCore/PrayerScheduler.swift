@@ -6,7 +6,7 @@ public struct NextPrayerResolver: Sendable {
 
     public init(
         calculator: PrayerCalculator = PrayerCalculator(),
-        calendar: Calendar = .gregorianUTC
+        calendar: Calendar = .current
     ) {
         self.calculator = calculator
         self.calendar = calendar
@@ -27,17 +27,19 @@ public struct NextPrayerResolver: Sendable {
             return next
         }
 
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now) ?? now
-        let schedule = try calculator.schedule(
-            for: tomorrow,
-            coordinates: coordinates,
-            settings: settings
-        )
+        for dayOffset in 1...7 {
+            let date = calendar.date(byAdding: .day, value: dayOffset, to: now) ?? now
+            let schedule = try calculator.schedule(
+                for: date,
+                coordinates: coordinates,
+                settings: settings
+            )
 
-        guard let next = schedule.times.first else {
-            throw PrayerCalculationError.unavailableTimes
+            if let next = schedule.nextPrayer(after: now) {
+                return next
+            }
         }
 
-        return next
+        throw PrayerCalculationError.unavailableTimes
     }
 }
