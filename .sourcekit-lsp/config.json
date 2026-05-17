@@ -1,0 +1,9 @@
+{
+  "swiftPM": {
+    "configuration": "debug"
+  },
+  "sourcekitd": {
+    "defaultWorkspaceType": "swiftPM",
+    "backgroundIndexing": true
+  }
+}

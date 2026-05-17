@@ -1,0 +1,25 @@
+[
+  {
+    "label": "swift build",
+    "command": "swift",
+    "args": ["build"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "swift test",
+    "command": "swift",
+    "args": ["test"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "check localization",
+    "command": "swift",
+    "args": ["scripts/check-localization.swift"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "build app bundle",
+    "command": "./scripts/build-app.sh",
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]

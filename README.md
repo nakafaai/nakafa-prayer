@@ -9,6 +9,21 @@ cover the screen for a short, recoverable focus window.
 Early macOS prototype. The app is built for local use first, then signed and
 notarized direct downloads through GitHub Releases.
 
+## Download
+
+Public builds are published on
+[GitHub Releases](https://github.com/nakafaai/nakafa-prayer/releases).
+
+For a normal install:
+
+1. Download the latest `NakafaPrayer.dmg`.
+2. Open the DMG.
+3. Drag `Nakafa Prayer.app` to Applications.
+4. Open the app and allow location permission.
+
+Signed downloads require Apple Developer credentials in the release workflow.
+Unsigned local builds are only for development.
+
 ## Features
 
 - Offline prayer time calculation with `adhan-swift`
@@ -35,6 +50,12 @@ swift test
 swift build
 ```
 
+Format Swift files:
+
+```bash
+swift format format --in-place --recursive Sources Tests
+```
+
 Build a local `.app` bundle:
 
 ```bash
@@ -42,10 +63,18 @@ Build a local `.app` bundle:
 open .build/NakafaPrayer.app
 ```
 
+Editor setup:
+
+- Zed works for editing, language server diagnostics, formatting, and project tasks.
+- Xcode is still useful for signing, notarization, App Store work, Instruments,
+  and deeper macOS debugging.
+
+See `docs/EDITOR.md` for the verified local setup.
+
 ## Release
 
 Direct releases use a signed and notarized DMG. Set the signing and notarization
-environment variables documented in `scripts/notarize.sh`, then run:
+environment variables documented in `docs/RELEASE.md`, then run:
 
 ```bash
 ./scripts/build-app.sh
