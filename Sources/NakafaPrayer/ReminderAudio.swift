@@ -32,11 +32,7 @@ final class ReminderAudio {
   }
 
   private func playBundledAdhan() {
-    let url =
-      Bundle.module.url(forResource: "adhan", withExtension: "mp3")
-      ?? Bundle.main.url(forResource: "adhan", withExtension: "mp3")
-
-    guard let url else {
+    guard let url = bundledAdhanURL() else {
       return
     }
 
@@ -47,5 +43,27 @@ final class ReminderAudio {
     } catch {
       player = nil
     }
+  }
+
+  private func bundledAdhanURL() -> URL? {
+    let appBundle = Bundle.main.resourceURL?.appendingPathComponent(
+      "nakafa-prayer_NakafaPrayer.bundle")
+
+    if let appBundle,
+      let bundle = Bundle(url: appBundle),
+      let url = bundle.url(forResource: "adhan", withExtension: "mp3")
+    {
+      return url
+    }
+
+    if let url = Bundle.main.url(forResource: "adhan", withExtension: "mp3") {
+      return url
+    }
+
+    guard Bundle.main.bundleURL.pathExtension != "app" else {
+      return nil
+    }
+
+    return Bundle.module.url(forResource: "adhan", withExtension: "mp3")
   }
 }

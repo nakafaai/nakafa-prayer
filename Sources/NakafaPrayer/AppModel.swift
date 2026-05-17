@@ -70,10 +70,10 @@ final class AppModel: ObservableObject {
   /// Recomputes the next prayer timer from current settings and coordinates.
   func reschedule() {
     timer?.invalidate()
+    nextPrayer = nil
     refreshStatus()
 
     guard let coordinates = settings.activeCoordinates else {
-      nextPrayer = nil
       return
     }
 
@@ -88,6 +88,7 @@ final class AppModel: ObservableObject {
       scheduleTimer(for: next)
     } catch {
       nextPrayer = nil
+      refreshStatus()
     }
   }
 

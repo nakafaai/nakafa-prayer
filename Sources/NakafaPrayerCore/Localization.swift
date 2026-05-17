@@ -46,7 +46,7 @@ private struct StringCatalog: Decodable, Sendable {
   let strings: [String: CatalogEntry]
 
   static func load() -> StringCatalog {
-    guard let url = Bundle.module.url(forResource: "Localizable", withExtension: "xcstrings"),
+    guard let url = catalogURL(),
       let data = try? Data(contentsOf: url),
       let catalog = try? JSONDecoder().decode(StringCatalog.self, from: data)
     else {
@@ -54,6 +54,24 @@ private struct StringCatalog: Decodable, Sendable {
     }
 
     return catalog
+  }
+
+  private static func catalogURL() -> URL? {
+    let appBundle = Bundle.main.resourceURL?.appendingPathComponent(
+      "nakafa-prayer_NakafaPrayerCore.bundle")
+
+    if let appBundle,
+      let bundle = Bundle(url: appBundle),
+      let url = bundle.url(forResource: "Localizable", withExtension: "xcstrings")
+    {
+      return url
+    }
+
+    guard Bundle.main.bundleURL.pathExtension != "app" else {
+      return nil
+    }
+
+    return Bundle.module.url(forResource: "Localizable", withExtension: "xcstrings")
   }
 
   func value(for key: String, language: String) -> String? {

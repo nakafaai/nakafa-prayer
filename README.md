@@ -14,6 +14,9 @@ notarized direct downloads through GitHub Releases.
 Public builds are published on
 [GitHub Releases](https://github.com/nakafaai/nakafa-prayer/releases).
 
+Direct latest download:
+[NakafaPrayer.dmg](https://github.com/nakafaai/nakafa-prayer/releases/latest/download/NakafaPrayer.dmg)
+
 For a normal install:
 
 1. Download the latest `NakafaPrayer.dmg`.
@@ -61,6 +64,12 @@ Build a local `.app` bundle:
 ```bash
 ./scripts/build-app.sh
 open .build/NakafaPrayer.app
+```
+
+Install the local app on this Mac:
+
+```bash
+./scripts/install-local.sh
 ```
 
 Editor setup:

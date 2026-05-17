@@ -22,6 +22,10 @@ Local verification:
 - Zed CLI is installed at `/usr/local/bin/zed`.
 - `sourcekit-lsp` is available at `/usr/bin/sourcekit-lsp`.
 - `swift format` is available through the installed Swift 6.2.3 toolchain.
+- `swift test` needs a Swift toolchain that includes the Swift Testing module.
+  If Command Line Tools cannot find it, select full Xcode first with
+  `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` and accept
+  the Xcode license.
 
 ## Xcode
 

@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 final class LockOverlayController {
   private var previousOptions: NSApplication.PresentationOptions = []
+  private var onFinish: (@MainActor @Sendable () -> Void)?
   private var state: LockState?
   private var timer: Timer?
   private var windows: [NSWindow] = []
@@ -30,6 +31,7 @@ final class LockOverlayController {
     }
 
     previousOptions = NSApp.presentationOptions
+    self.onFinish = onFinish
     NSApp.activate(ignoringOtherApps: true)
     NSApp.presentationOptions = [
       .hideDock,
@@ -55,11 +57,13 @@ final class LockOverlayController {
     for window in windows {
       window.makeKeyAndOrderFront(nil)
     }
-    scheduleTick(onFinish: onFinish)
+    scheduleTick()
   }
 
   /// Releases all overlay windows and restores the previous app presentation options.
-  func finish() {
+  func finish(notify: Bool = false) {
+    let callback = notify ? onFinish : nil
+    onFinish = nil
     timer?.invalidate()
     timer = nil
     for window in windows {
@@ -68,11 +72,12 @@ final class LockOverlayController {
     windows = []
     state = nil
     NSApp.presentationOptions = previousOptions
+    callback?()
   }
 
   private func makeWindow(screen: NSScreen, state: LockState) -> NSWindow {
     let view = LockOverlayView(state: state) { [weak self] in
-      self?.finish()
+      self?.finish(notify: true)
     }
 
     let window = NSWindow(
@@ -90,7 +95,7 @@ final class LockOverlayController {
     return window
   }
 
-  private func scheduleTick(onFinish: @escaping @MainActor @Sendable () -> Void) {
+  private func scheduleTick() {
     timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
       Task { @MainActor in
         guard let self, let state = self.state else {
@@ -100,8 +105,7 @@ final class LockOverlayController {
         state.tick()
 
         if state.remaining <= 0 {
-          self.finish()
-          onFinish()
+          self.finish(notify: true)
         }
       }
     }
