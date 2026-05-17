@@ -83,7 +83,7 @@ public struct PrayerSettings: Codable, Equatable, Sendable {
     calculationMethod: CalculationMethodID = .muslimWorldLeague,
     madhab: MadhabID = .shafi,
     lockDurationMinutes: Int = 10,
-    launchAtLogin: Bool = true,
+    launchAtLogin: Bool = false,
     adhanEnabled: Bool = true,
     ttsEnabled: Bool = true,
     useManualCoordinates: Bool = false,
