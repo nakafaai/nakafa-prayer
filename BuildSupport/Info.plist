@@ -10,6 +10,8 @@
   <string>NakafaPrayer</string>
   <key>CFBundleIdentifier</key>
   <string>ai.nakafa.prayer</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
@@ -26,6 +28,10 @@
   <true/>
   <key>NSHighResolutionCapable</key>
   <true/>
+  <key>NSSupportsAutomaticTermination</key>
+  <true/>
+  <key>NSSupportsSuddenTermination</key>
+  <false/>
   <key>NSLocationUsageDescription</key>
   <string>Nakafa Prayer uses your location locally to calculate accurate prayer times.</string>
   <key>NSLocationWhenInUseUsageDescription</key>

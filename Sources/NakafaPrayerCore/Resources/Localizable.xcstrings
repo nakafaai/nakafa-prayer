@@ -1,22 +1,106 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "action.apply_location" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Apply Location" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Terapkan Lokasi" } }
+      }
+    },
+    "action.enable_notifications" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Notifications" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Aktifkan Notifikasi" } }
+      }
+    },
+    "action.open_location_settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Location Settings" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka Pengaturan Lokasi" } }
+      }
+    },
+    "action.open_login_items" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Login Items" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka Item Masuk" } }
+      }
+    },
+    "action.open_notification_settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Notification Settings" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka Pengaturan Notifikasi" } }
+      }
+    },
+    "action.retry_scheduling" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Retry Scheduling" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Coba Jadwalkan Lagi" } }
+      }
+    },
+    "action.use_current_location" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Use Current Location" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Gunakan Lokasi Saat Ini" } }
+      }
+    },
+    "app.calculation_summary" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ · Asr %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "%@ · Asar %@" } }
+      }
+    },
+    "app.check_for_updates" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Check for Updates…" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Periksa Pembaruan…" } }
+      }
+    },
+    "app.location_automatic_coordinates" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Automatic: %.2f, %.2f" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Otomatis: %.2f, %.2f" } }
+      }
+    },
+    "app.location_manual_coordinates" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manual: %.2f, %.2f" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Manual: %.2f, %.2f" } }
+      }
+    },
+    "app.location_manual_label" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manual: %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Manual: %@" } }
+      }
+    },
     "app.name" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Nakafa Prayer" } },
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Nakafa Prayer" } }
       }
     },
-    "app.no_coordinates" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set a location to calculate prayer times." } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Atur lokasi untuk menghitung waktu salat." } }
-      }
-    },
     "app.next_prayer" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Next: %@ at %@" } },
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Berikutnya: %@ pukul %@" } }
+      }
+    },
+    "app.next_prayer_accessibility" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next prayer, %@ at %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Salat berikutnya, %@ pukul %@" } }
+      }
+    },
+    "app.prayer_time_accessibility" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ at %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "%@ pukul %@" } }
+      }
+    },
+    "app.prayer_time_menu_item" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ · %@" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "%@ · %@" } }
       }
     },
     "app.quit" : {
@@ -37,10 +121,94 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengaturan" } }
       }
     },
-    "app.test_lock" : {
+    "app.today_prayer_times" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Test Lock" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tes Kunci" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hari ini" } }
+      }
+    },
+    "app.tomorrow_prayer_times" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tomorrow" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Besok" } }
+      }
+    },
+    "focus.cancel" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Batal" } }
+      }
+    },
+    "focus.consent_message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus Mode will cover every connected display for %d minutes when Nakafa Prayer is running. It starts automatically at prayer time, may start up to 5 minutes after wake, and can always be ended with its button or Escape. App switching remains available." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Mode Fokus akan menutupi setiap layar yang terhubung selama %d menit ketika Nakafa Prayer berjalan. Mode ini dimulai otomatis pada waktu salat, dapat dimulai hingga 5 menit setelah Mac bangun, dan selalu dapat diakhiri dengan tombolnya atau Escape. Pergantian aplikasi tetap tersedia." } }
+      }
+    },
+    "focus.consent_title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Focus Mode?" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Aktifkan Mode Fokus?" } }
+      }
+    },
+    "focus.countdown" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ remaining" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Sisa %@" } }
+      }
+    },
+    "focus.enable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Focus Mode" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Aktifkan Mode Fokus" } }
+      }
+    },
+    "focus.end" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End Focus Mode" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Akhiri Mode Fokus" } }
+      }
+    },
+    "focus.end_confirmation_message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Prayer focus will end on every display." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Fokus salat akan berakhir di setiap layar." } }
+      }
+    },
+    "focus.end_confirmation_title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End Focus Mode?" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Akhiri Mode Fokus?" } }
+      }
+    },
+    "focus.end_hint" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shows a confirmation before ending Focus Mode. You can also press Escape." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Menampilkan konfirmasi sebelum mengakhiri Mode Fokus. Anda juga dapat menekan Escape." } }
+      }
+    },
+    "focus.help" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional full-screen prayer prompt while the app is running. Notifications remain the reliable reminder channel." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat salat layar penuh opsional ketika aplikasi berjalan. Notifikasi tetap menjadi saluran pengingat yang andal." } }
+      }
+    },
+    "focus.message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause, step away, and pray when you are ready." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Berhenti sejenak, tinggalkan layar, dan salat ketika Anda siap." } }
+      }
+    },
+    "focus.preview" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Preview Focus Mode" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pratinjau Mode Fokus" } }
+      }
+    },
+    "focus.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for %@ prayer" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktunya salat %@" } }
       }
     },
     "language.en" : {
@@ -61,28 +229,28 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Sistem" } }
       }
     },
-    "lock.countdown" : {
+    "location.automatic" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ remaining" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Sisa %@" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Automatic" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Otomatis" } }
       }
     },
-    "lock.emergency" : {
+    "location.manual" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hold for emergency release" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tahan untuk buka darurat" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manual" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Manual" } }
       }
     },
-    "lock.message" : {
+    "madhab.hanafi" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Step away from the laptop and pray now." } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tinggalkan laptop dan salat sekarang." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } }
       }
     },
-    "lock.title" : {
+    "madhab.shafi" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for %@ prayer" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktunya salat %@" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shafi" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Syafii" } }
       }
     },
     "method.dubai" : {
@@ -112,13 +280,13 @@
     "method.moonsightingCommittee" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Moonsighting Committee" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Moonsighting Committee" } }
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Komite Pengamatan Bulan" } }
       }
     },
     "method.muslimWorldLeague" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Muslim World League" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Muslim World League" } }
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Liga Muslim Dunia" } }
       }
     },
     "method.northAmerica" : {
@@ -142,7 +310,7 @@
     "method.tehran" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Tehran" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tehran" } }
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Teheran" } }
       }
     },
     "method.turkey" : {
@@ -157,16 +325,16 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Umm al-Qura" } }
       }
     },
-    "madhab.hanafi" : {
+    "notification.body" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hanafi" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "It is time to pause and pray." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Saatnya berhenti sejenak dan salat." } }
       }
     },
-    "madhab.shafi" : {
+    "notification.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shafi" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Syafii" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ prayer" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Salat %@" } }
       }
     },
     "prayer.asr" : {
@@ -201,8 +369,8 @@
     },
     "settings.adhan" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Adhan audio" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Audio adzan" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play the bundled adhan alert" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Putar pengingat adzan bawaan" } }
       }
     },
     "settings.calculation" : {
@@ -211,16 +379,34 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Perhitungan" } }
       }
     },
+    "settings.calculation_method" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Method" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Metode" } }
+      }
+    },
+    "settings.focus_duration" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Duration" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Durasi" } }
+      }
+    },
+    "settings.focus_mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus Mode" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Mode Fokus" } }
+      }
+    },
+    "settings.general" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "General" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Umum" } }
+      }
+    },
     "settings.language" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Bahasa" } }
-      }
-    },
-    "settings.launch_at_login" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at login" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka saat login" } }
       }
     },
     "settings.latitude" : {
@@ -229,16 +415,34 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Lintang" } }
       }
     },
+    "settings.launch_at_login" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at login" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka saat masuk" } }
+      }
+    },
     "settings.location" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Location" } },
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Lokasi" } }
       }
     },
-    "settings.lock_duration" : {
+    "settings.location_label" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lock duration" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Durasi kunci" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional local label" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Label lokal opsional" } }
+      }
+    },
+    "settings.location_mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location source" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Sumber lokasi" } }
+      }
+    },
+    "settings.location_privacy_help" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Coordinates stay on this Mac. Nakafa Prayer does not look up or transmit place names." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Koordinat tetap di Mac ini. Nakafa Prayer tidak mencari atau mengirim nama tempat." } }
       }
     },
     "settings.longitude" : {
@@ -253,10 +457,10 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "Mazhab Asar" } }
       }
     },
-    "settings.manual_coordinates" : {
+    "settings.manual_location_help" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manual coordinates" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Koordinat manual" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Both coordinates are required. Typing does not change reminders until you apply them." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Kedua koordinat wajib diisi. Mengetik tidak mengubah pengingat sampai Anda menerapkannya." } }
       }
     },
     "settings.minutes" : {
@@ -265,16 +469,166 @@
         "id" : { "stringUnit" : { "state" : "translated", "value" : "%d menit" } }
       }
     },
-    "settings.tts" : {
+    "settings.preview_adhan" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Spoken reminder" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat suara" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Preview adhan alert" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pratinjau pengingat adzan" } }
       }
     },
-    "tts.prayer_due" : {
+    "settings.reminder" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for %@ prayer." } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktunya salat %@." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminder" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat" } }
+      }
+    },
+    "settings.reminder_help" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Local notifications deliver prayer reminders while the app is asleep or closed. Permission is requested only when you choose to enable them." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Notifikasi lokal mengirim pengingat salat saat aplikasi tertidur atau ditutup. Izin hanya diminta ketika Anda memilih untuk mengaktifkannya." } }
+      }
+    },
+    "settings.stop_adhan_preview" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stop preview" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hentikan pratinjau" } }
+      }
+    },
+    "state.audio_unavailable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The bundled adhan alert is unavailable." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat adzan bawaan tidak tersedia." } }
+      }
+    },
+    "state.calculation_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Prayer times could not be calculated." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Waktu salat tidak dapat dihitung." } }
+      }
+    },
+    "state.location_available" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location is ready" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Lokasi siap" } }
+      }
+    },
+    "state.location_cache_save_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The automatic location could not be saved locally" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Lokasi otomatis tidak dapat disimpan secara lokal" } }
+      }
+    },
+    "state.location_denied" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location access is denied" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Akses lokasi ditolak" } }
+      }
+    },
+    "state.location_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Current location is unavailable" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Lokasi saat ini tidak tersedia" } }
+      }
+    },
+    "state.location_invalid_manual" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enter a valid latitude and longitude" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Masukkan lintang dan bujur yang valid" } }
+      }
+    },
+    "state.location_not_configured" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set a location to calculate prayer times" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Atur lokasi untuk menghitung waktu salat" } }
+      }
+    },
+    "state.location_requesting" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Getting current location…" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Mengambil lokasi saat ini…" } }
+      }
+    },
+    "state.location_requesting_permission" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Waiting for location permission…" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Menunggu izin lokasi…" } }
+      }
+    },
+    "state.location_restricted" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location access is restricted" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Akses lokasi dibatasi" } }
+      }
+    },
+    "state.login_item_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at login could not be updated." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka saat masuk tidak dapat diperbarui." } }
+      }
+    },
+    "state.login_item_requires_approval" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Approval is required in Login Items." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Persetujuan diperlukan di Item Masuk." } }
+      }
+    },
+    "state.login_item_unavailable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at login is available in the installed app." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Buka saat masuk tersedia di aplikasi yang terpasang." } }
+      }
+    },
+    "state.notifications_alerts_disabled" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification alerts are disabled" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Peringatan notifikasi dinonaktifkan" } }
+      }
+    },
+    "state.notifications_authorization_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification permission could not be requested" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Izin notifikasi tidak dapat diminta" } }
+      }
+    },
+    "state.notifications_authorized" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders are active" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat aktif" } }
+      }
+    },
+    "state.notifications_denied" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders are inactive because notifications are denied" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat tidak aktif karena notifikasi ditolak" } }
+      }
+    },
+    "state.notifications_not_determined" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable notifications for reliable reminders" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Aktifkan notifikasi untuk pengingat yang andal" } }
+      }
+    },
+    "state.notifications_scheduling_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders could not be scheduled" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat tidak dapat dijadwalkan" } }
+      }
+    },
+    "state.notifications_sound_disabled" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders are active without sound" } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengingat aktif tanpa suara" } }
+      }
+    },
+    "state.settings_recovered" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unreadable settings were reset to safe defaults." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengaturan yang tidak dapat dibaca telah diatur ulang ke bawaan yang aman." } }
+      }
+    },
+    "state.settings_save_failed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings could not be saved." } },
+        "id" : { "stringUnit" : { "state" : "translated", "value" : "Pengaturan tidak dapat disimpan." } }
       }
     }
   },

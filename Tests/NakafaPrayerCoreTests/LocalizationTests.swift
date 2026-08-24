@@ -1,23 +1,20 @@
-import Testing
+import XCTest
 
 @testable import NakafaPrayerCore
 
-@Suite
-struct LocalizationTests {
-  @Test
-  func indonesianPrayerName() {
+final class LocalizationTests: XCTestCase {
+  func testIndonesianPrayerName() {
     let localizer = Localizer(language: .indonesian)
 
-    #expect(localizer.prayerName(.dhuhr) == "Zuhur")
+    XCTAssertEqual(localizer.prayerName(.dhuhr), "Zuhur")
   }
 
-  @Test
-  func englishFallback() {
+  func testEnglishFallback() {
     let resolved = AppLanguage.resolvedIdentifier(
       storedValue: "zz",
       preferredLanguages: ["zz-ZZ"]
     )
 
-    #expect(resolved == "en")
+    XCTAssertEqual(resolved, "en")
   }
 }

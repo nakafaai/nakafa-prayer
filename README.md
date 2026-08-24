@@ -1,13 +1,27 @@
 # Nakafa Prayer
 
-Nakafa Prayer is an open source macOS menu bar app that helps you pray on time.
-It calculates prayer times locally from your location, plays a reminder, and can
-cover the screen for a short, recoverable focus window.
+Nakafa Prayer is a native macOS menu bar app for locally calculated prayer
+times and reliable local reminders.
 
 ## Status
 
-Early macOS prototype. The app is built for local use first, then signed and
-notarized direct downloads through GitHub Releases.
+The app is in beta. Public direct downloads must be Developer ID signed and
+notarized before broad distribution.
+
+## Features
+
+- Seven local calendar days of prayer notifications scheduled through macOS
+- Offline prayer calculation with `adhan-swift`
+- Automatic Core Location or explicitly applied manual coordinates
+- One bundled, local adhan alert with Settings preview
+- Optional, reversible Focus Mode across connected displays
+- English and Indonesian interfaces
+- User-controlled launch at login
+- Local settings and cached coordinates with no Nakafa account or analytics
+
+Notifications are the default reminder channel. Focus Mode is opt-in, runs only
+while the app is running, does not block application switching, and never starts
+more than five minutes after a delayed prayer event.
 
 ## Download
 
@@ -19,82 +33,67 @@ Direct latest download:
 
 For a normal install:
 
-1. Download the latest `NakafaPrayer.dmg`.
-2. Open the DMG.
-3. Drag `Nakafa Prayer.app` to Applications.
-4. Open the app and allow location permission.
+1. Download and open `NakafaPrayer.dmg`.
+2. Drag `Nakafa Prayer.app` to Applications.
+3. Open the app.
+4. In Settings, enable notifications and choose a location source.
 
-Signed downloads require Apple Developer credentials in the release workflow.
-Unsigned local builds are only for development.
+The app requests notification and location permission only after the related
+user action.
 
-## Features
+## Privacy
 
-- Offline prayer time calculation with `adhan-swift`
-- Current-location or manual-coordinate mode
-- Five wajib prayer reminders
-- Adhan audio hook plus localized spoken reminder
-- Strict recoverable fullscreen lock
-- English and Indonesian UI, ready for future locales
-- Launch-at-login support
-- Local-only settings and location data
-
-## Requirements
-
-- macOS 14+
-- Xcode 26 or newer, or Swift 6 toolchain
-- Apple Developer Program membership for signed releases
+Prayer calculation, coordinates, location labels, preferences, and reminder
+planning stay local. The app does not reverse geocode coordinates and does not
+stream audio. Direct builds retain network access only for Sparkle update checks.
+The App Store build has no network-client entitlement or application-controlled
+network path. See [PRIVACY.md](PRIVACY.md).
 
 ## Development
 
+Requirements:
+
+- macOS 14 or newer
+- Xcode 26 or newer, or a compatible Swift 6 toolchain
+
+Build and test:
+
 ```bash
-git clone https://github.com/nakafaai/nakafa-prayer.git
-cd nakafa-prayer
 swift test
 swift build
+swift build --product NakafaPrayerAppStore
+swift scripts/check-localization.swift
+swift format lint --recursive --strict Sources Tests scripts/prepare-adhan-audio.swift
+```
+
+Build native app bundles:
+
+```bash
+./scripts/build-app.sh
+./scripts/verify-app-bundle.sh direct
+
+RELEASE_CHANNEL=appstore ./scripts/build-app.sh
+./scripts/verify-app-bundle.sh appstore
+./scripts/audit-appstore-network.sh
 ```
 
 Format Swift files:
 
 ```bash
-swift format format --in-place --recursive Sources Tests
+swift format format --in-place --recursive Sources Tests scripts/prepare-adhan-audio.swift
 ```
 
-Build a local `.app` bundle:
+The bundled alert provenance and reproducible edit are recorded in
+`Sources/NakafaPrayerApp/Resources/AdhanAudio/ATTRIBUTION.md`.
 
-```bash
-./scripts/build-app.sh
-open .build/NakafaPrayer.app
-```
+## Distribution
 
-Install the local app on this Mac:
-
-```bash
-./scripts/install-local.sh
-```
-
-Editor setup:
-
-- Zed works for editing, language server diagnostics, formatting, and project tasks.
-- Xcode is still useful for signing, notarization, App Store work, Instruments,
-  and deeper macOS debugging.
-
-See `docs/EDITOR.md` for the verified local setup.
-
-## Release
-
-Direct releases use a signed and notarized DMG. Set the signing and notarization
-environment variables documented in `docs/RELEASE.md`, then run:
-
-```bash
-./scripts/build-app.sh
-./scripts/create-dmg.sh
-./scripts/notarize.sh .build/NakafaPrayer.dmg
-```
-
-## Privacy
-
-Location is only used on-device to calculate prayer times. See `PRIVACY.md`.
+The direct channel embeds Sparkle for signed appcast updates. The App Store
+channel excludes Sparkle and relies on Mac App Store updates. See
+`docs/RELEASE.md` and `docs/APP_STORE.md`.
 
 ## License
 
-Apache-2.0. See `LICENSE`.
+Application source is Apache-2.0. See `LICENSE`. Built app bundles also include
+the required Adhan and Sparkle dependency notices. The adhan alert is CC0
+1.0 and documented separately in its attribution file.
