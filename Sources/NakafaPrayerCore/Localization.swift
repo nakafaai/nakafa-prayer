@@ -15,12 +15,12 @@ public struct Localizer: Sendable {
     self.language = language
   }
 
-  /// The resolved BCP-47 language code used by SwiftUI, AppKit, TTS, and formatters.
+  /// The resolved BCP-47 language code used by SwiftUI, AppKit, and formatters.
   public var localeIdentifier: String {
     language.resolvedIdentifier
   }
 
-  /// Foundation locale for date, number, and speech formatting.
+  /// Foundation locale for date and number formatting.
   public var locale: Locale {
     Locale(identifier: localeIdentifier)
   }
@@ -40,6 +40,7 @@ public struct Localizer: Sendable {
   public func prayerName(_ prayer: PrayerID) -> String {
     text(prayer.localizationKey)
   }
+
 }
 
 private struct StringCatalog: Decodable, Sendable {

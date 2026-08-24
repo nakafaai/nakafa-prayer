@@ -35,13 +35,13 @@ public enum PrayerCalculationError: Error, Equatable, Sendable {
 
 /// Calculates prayer schedules using `adhan-swift`.
 ///
-/// The default calendar is `.current` so day boundaries match the user's local
-/// timezone. Tests can inject a fixed UTC calendar for deterministic snapshots.
+/// The default calendar follows system timezone changes so local day boundaries
+/// stay current. Tests can inject a fixed UTC calendar for deterministic data.
 public struct PrayerCalculator: Sendable {
   private let calendar: Calendar
 
   /// Creates a calculator with the calendar used to choose the local day.
-  public init(calendar: Calendar = .current) {
+  public init(calendar: Calendar = .autoupdatingCurrent) {
     self.calendar = calendar
   }
 

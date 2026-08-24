@@ -19,7 +19,7 @@ jobs:
     runs-on: macos-15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       - name: Swift version
         run: swift --version
@@ -30,5 +30,65 @@ jobs:
       - name: Build
         run: swift build
 
+      - name: Build App Store product
+        run: swift build --product NakafaPrayerAppStore
+
       - name: Check localization
         run: swift scripts/check-localization.swift
+
+      - name: Lint Swift formatting
+        run: swift format lint --recursive --strict Sources Tests scripts/prepare-adhan-audio.swift
+
+      - name: Validate bundle metadata
+        run: |
+          plutil -lint \
+            BuildSupport/Info.plist \
+            BuildSupport/NakafaPrayerDirect.entitlements \
+            BuildSupport/NakafaPrayerAppStore.entitlements
+
+      - name: Build app bundle
+        run: ./scripts/build-app.sh
+
+      - name: Verify app signature
+        run: codesign --verify --strict --verbose=2 .build/NakafaPrayer.app
+
+      - name: Verify direct resources and entitlements
+        run: ./scripts/verify-app-bundle.sh direct
+
+      - name: Verify direct channel embeds Sparkle
+        run: |
+          test -d ".build/NakafaPrayer.app/Contents/Frameworks/Sparkle.framework"
+          otool -L ".build/NakafaPrayer.app/Contents/MacOS/NakafaPrayer" | grep Sparkle
+
+      - name: Build App Store app bundle
+        run: RELEASE_CHANNEL=appstore ./scripts/build-app.sh
+
+      - name: Verify App Store channel excludes Sparkle
+        run: |
+          APP=".build/NakafaPrayer.app"
+          if [[ -d "$APP/Contents/Frameworks/Sparkle.framework" ]]; then
+            echo "The App Store channel contains Sparkle.framework." >&2
+            exit 1
+          fi
+
+          if otool -L "$APP/Contents/MacOS/NakafaPrayer" | grep -q Sparkle; then
+            echo "The App Store executable links Sparkle." >&2
+            exit 1
+          fi
+
+          for key in \
+            SUFeedURL \
+            SUPublicEDKey \
+            SURequireSignedFeed \
+            SUVerifyUpdateBeforeExtraction; do
+            if /usr/libexec/PlistBuddy -c "Print :$key" "$APP/Contents/Info.plist" \
+              >/dev/null 2>&1; then
+              echo "The App Store Info.plist contains $key." >&2
+              exit 1
+            fi
+          done
+
+      - name: Verify App Store resources, entitlements, and network boundary
+        run: |
+          ./scripts/verify-app-bundle.sh appstore
+          ./scripts/audit-appstore-network.sh

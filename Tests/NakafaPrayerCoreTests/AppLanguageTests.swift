@@ -1,26 +1,23 @@
-import Testing
+import XCTest
 
 @testable import NakafaPrayerCore
 
-@Suite
-struct AppLanguageTests {
-  @Test
-  func systemLanguageUsesSupportedPreferredLanguage() {
+final class AppLanguageTests: XCTestCase {
+  func testSystemLanguageUsesSupportedPreferredLanguage() {
     let resolved = AppLanguage.resolvedIdentifier(
       storedValue: AppLanguage.system.rawValue,
       preferredLanguages: ["id-ID", "en-US"]
     )
 
-    #expect(resolved == "id")
+    XCTAssertEqual(resolved, "id")
   }
 
-  @Test
-  func unsupportedLanguageFallsBackToEnglish() {
+  func testUnsupportedLanguageFallsBackToEnglish() {
     let resolved = AppLanguage.resolvedIdentifier(
       storedValue: "fr",
       preferredLanguages: ["fr-FR"]
     )
 
-    #expect(resolved == "en")
+    XCTAssertEqual(resolved, "en")
   }
 }

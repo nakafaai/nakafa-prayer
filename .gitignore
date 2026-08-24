@@ -1,6 +1,8 @@
 .DS_Store
 .build/
 .swiftpm/
+.agents/
+skills-lock.json
 DerivedData/
 *.xcuserdata/
 *.xcuserstate
@@ -13,5 +15,3 @@ DerivedData/
 *.env
 *.env.*
 !.env.example
-.agents/
-skills-lock.json

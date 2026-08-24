@@ -1,43 +1,49 @@
 # Architecture
 
-Nakafa Prayer v1 is a native Swift macOS app.
+Nakafa Prayer is a native Swift macOS app built around standard menu bar,
+Settings, notification, location, login-item, and AppKit window APIs.
 
-## Why Native Swift
+## Modules
 
-Expo is a strong fit for Android, iOS, and web apps. The Expo docs describe a
-JavaScript/TypeScript app model, native builds for iOS and Android, and Expo
-Modules for adding Swift/Kotlin native APIs. Expo Modules currently list macOS
-as experimental additional platform support.
+- `NakafaPrayerCore` owns stable IDs, schema-versioned settings, localization,
+  prayer calculation, date formatting, and rolling schedule planning.
+- `NakafaPrayerApp` owns local notifications, Core Location, local location
+  cache, the native menu and Settings scenes, Focus Mode, and login items.
+- `NakafaPrayer` is the direct-download executable with optional Sparkle updates.
+- `NakafaPrayerAppStore` excludes Sparkle and application network capability.
+- `scripts` owns bundling, signing validation, audio preparation, and release
+  boundary checks.
 
-This app's primary product surface is macOS-specific:
+## Reminder Flow
 
-- menu bar lifecycle
-- Core Location permission copy
-- `SMAppService` launch-at-login registration
-- AppKit fullscreen windows across all displays
-- app switching and menu bar presentation options
-- Developer ID signing, notarization, and DMG distribution
+`PrayerSchedulePlanner` calculates up to 35 future occurrences across seven
+local calendar days. Each ID contains its local date and prayer ID. The
+notification scheduler reconciles only IDs with the
+`ai.nakafa.prayer.v1.` prefix, adds desired requests first, then removes stale
+owned requests.
 
-Keeping v1 in Swift avoids adding a JavaScript runtime and native-module layer
-around APIs that already need direct AppKit and ServiceManagement control.
+Reconciliation runs after committed calculation or location changes, startup,
+wake, clock changes, timezone changes, and local day changes. Manual coordinate
+text fields are view-local drafts. Only Apply persists and reschedules them.
 
-## Module Shape
+## Location Boundary
 
-- `NakafaPrayerCore` owns settings, localization, time formatting, prayer IDs,
-  prayer calculation, and next-prayer scheduling.
-- `NakafaPrayer` owns macOS services: location, menu bar, settings window,
-  reminder audio, launch-at-login sync, and the lock overlay.
-- Shell scripts own local app bundling, local installation, DMG creation, and
-  notarization.
+`PrayerSettings` stores the selected location mode, optional manual coordinates,
+and an optional user-entered label. `LocationCache` separately stores the last
+automatic coordinates and capture time. `LocationService` requests a one-shot
+Core Location update and never geocodes or creates a network request.
+
+## Focus Mode
+
+Focus Mode is an explicit preference with versioned consent. A single timer
+updates the current menu occurrence and may start Focus Mode only when the event
+is no more than five minutes late. Full-screen windows use auto-hidden system UI,
+preserve app switching, track connected displays, and provide Button, Escape,
+confirmation, and accessibility release paths.
 
 ## Distribution
 
-The first public distribution target is a signed and notarized GitHub Release
-DMG. The stable direct-download URL is:
-
-```text
-https://github.com/nakafaai/nakafa-prayer/releases/latest/download/NakafaPrayer.dmg
-```
-
-App Store distribution can be added later, but it may require a softer lock mode
-or a separate configuration if review rejects the strict focus behavior.
+The direct build uses `NakafaPrayerDirect.entitlements`, including network access
+for Sparkle. The App Store build uses `NakafaPrayerAppStore.entitlements`, which
+omits network-client access. Both package the same local adhan alert in the main
+app Resources directory for notification delivery.

@@ -1,6 +1,6 @@
 import Foundation
 
-/// Locale-aware time and countdown formatting used by menu and lock UI.
+/// Locale-aware time and countdown formatting used by the menu and Focus Mode.
 public struct TimeFormatting: Sendable {
   private let locale: Locale
   private let timeZone: TimeZone

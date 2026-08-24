@@ -4,19 +4,72 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  preflight:
+    name: Validate Release Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify release secrets
+        env:
+          DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          SPARKLE_PUBLIC_ED_KEY: ${{ secrets.SPARKLE_PUBLIC_ED_KEY }}
+          SPARKLE_PRIVATE_ED_KEY: ${{ secrets.SPARKLE_PRIVATE_ED_KEY }}
+        run: |
+          missing=0
+          for name in \
+            DEVELOPER_ID_APPLICATION \
+            APPLE_CERTIFICATE_P12_BASE64 \
+            APPLE_CERTIFICATE_PASSWORD \
+            KEYCHAIN_PASSWORD \
+            APPLE_ID \
+            APPLE_TEAM_ID \
+            APPLE_APP_SPECIFIC_PASSWORD \
+            SPARKLE_PUBLIC_ED_KEY \
+            SPARKLE_PRIVATE_ED_KEY; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Missing $name"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
   release:
     name: Build Release
+    needs: preflight
+    if: github.event_name == 'push'
     runs-on: macos-15
     permissions:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Test
+        run: swift test
+
+      - name: Check localization
+        run: swift scripts/check-localization.swift
+
+      - name: Lint Swift formatting
+        run: swift format lint --recursive --strict Sources Tests scripts/prepare-adhan-audio.swift
+
+      - name: Validate bundle metadata
+        run: |
+          plutil -lint \
+            BuildSupport/Info.plist \
+            BuildSupport/NakafaPrayerDirect.entitlements \
+            BuildSupport/NakafaPrayerAppStore.entitlements
 
       - name: Import Developer ID certificate
         run: |
@@ -39,7 +92,6 @@ jobs:
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           security import "$CERTIFICATE_PATH" \
             -P "$APPLE_CERTIFICATE_PASSWORD" \
-            -A \
             -t cert \
             -f pkcs12 \
             -k "$KEYCHAIN_PATH"
@@ -58,6 +110,19 @@ jobs:
         run: ./scripts/build-app.sh
         env:
           DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
+          SPARKLE_PUBLIC_ED_KEY: ${{ secrets.SPARKLE_PUBLIC_ED_KEY }}
+          APP_VERSION: ${{ github.ref_name }}
+          APP_BUILD: ${{ github.run_number }}
+
+      - name: Verify direct updater metadata
+        run: |
+          test -d ".build/NakafaPrayer.app/Contents/Frameworks/Sparkle.framework"
+          /usr/libexec/PlistBuddy -c "Print :SUFeedURL" ".build/NakafaPrayer.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :SUPublicEDKey" ".build/NakafaPrayer.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :SURequireSignedFeed" ".build/NakafaPrayer.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :SUVerifyUpdateBeforeExtraction" ".build/NakafaPrayer.app/Contents/Info.plist"
+          otool -L ".build/NakafaPrayer.app/Contents/MacOS/NakafaPrayer" | grep Sparkle
+          ./scripts/verify-app-bundle.sh direct
 
       - name: Create DMG
         run: ./scripts/create-dmg.sh
@@ -69,7 +134,14 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
 
+      - name: Generate Sparkle appcast
+        run: ./scripts/generate-appcast.sh .build/NakafaPrayer.dmg
+        env:
+          SPARKLE_PRIVATE_ED_KEY: ${{ secrets.SPARKLE_PRIVATE_ED_KEY }}
+
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
-          files: .build/NakafaPrayer.dmg
+          files: |
+            .build/NakafaPrayer.dmg
+            .build/appcast.xml
