@@ -256,7 +256,17 @@ private final class SystemNotificationCenterClient: NotificationCenterClient {
   }
 
   func requestAuthorization() async throws {
-    _ = try await center.requestAuthorization(options: [.alert, .sound])
+    try await withCheckedThrowingContinuation {
+      (continuation: CheckedContinuation<Void, Error>) in
+      center.requestAuthorization(options: [.alert, .sound]) { _, error in
+        if let error {
+          continuation.resume(throwing: error)
+          return
+        }
+
+        continuation.resume(returning: ())
+      }
+    }
   }
 
   func pendingRequestIdentifiers() async -> [String] {
@@ -268,7 +278,17 @@ private final class SystemNotificationCenterClient: NotificationCenterClient {
   }
 
   func add(_ request: UNNotificationRequest) async throws {
-    try await center.add(request)
+    try await withCheckedThrowingContinuation {
+      (continuation: CheckedContinuation<Void, Error>) in
+      center.add(request) { error in
+        if let error {
+          continuation.resume(throwing: error)
+          return
+        }
+
+        continuation.resume(returning: ())
+      }
+    }
   }
 
   func removePendingRequests(withIdentifiers identifiers: [String]) {
