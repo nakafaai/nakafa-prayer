@@ -3,6 +3,17 @@ import NakafaPrayerCore
 
 /// Parses a latitude and longitude only when both localized fields are complete.
 struct ManualLocationParser: Sendable {
+  func coordinateText(_ value: Double?, locale: Locale) -> String {
+    guard let value, value.isFinite else {
+      return ""
+    }
+
+    let formatter = formatter(locale: locale)
+    formatter.minimumFractionDigits = 6
+    formatter.maximumFractionDigits = 6
+    return formatter.string(from: NSNumber(value: value)) ?? ""
+  }
+
   func coordinates(
     latitude: String,
     longitude: String,
@@ -27,10 +38,7 @@ struct ManualLocationParser: Sendable {
       return nil
     }
 
-    let formatter = NumberFormatter()
-    formatter.locale = locale
-    formatter.numberStyle = .decimal
-    formatter.isLenient = false
+    let formatter = formatter(locale: locale)
 
     guard let value = formatter.number(from: trimmed)?.doubleValue,
       value.isFinite
@@ -39,5 +47,14 @@ struct ManualLocationParser: Sendable {
     }
 
     return value
+  }
+
+  private func formatter(locale: Locale) -> NumberFormatter {
+    let formatter = NumberFormatter()
+    formatter.locale = locale
+    formatter.numberStyle = .decimal
+    formatter.isLenient = false
+    formatter.usesGroupingSeparator = false
+    return formatter
   }
 }

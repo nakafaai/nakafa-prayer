@@ -58,6 +58,24 @@ final class LocationTests: XCTestCase {
     )
   }
 
+  func testManualCoordinateTextUsesSelectedLocaleAndRoundTrips() {
+    let parser = ManualLocationParser()
+    let locale = Locale(identifier: "id_ID")
+    let latitude = parser.coordinateText(-6.2, locale: locale)
+    let longitude = parser.coordinateText(106.816666, locale: locale)
+
+    XCTAssertEqual(latitude, "-6,200000")
+    XCTAssertEqual(longitude, "106,816666")
+    XCTAssertEqual(
+      parser.coordinates(
+        latitude: latitude,
+        longitude: longitude,
+        locale: locale
+      ),
+      PrayerCoordinates(latitude: -6.2, longitude: 106.816666)
+    )
+  }
+
   func testLocationCacheRoundTripRejectsInvalidCoordinates() throws {
     let suiteName = "LocationTests.\(UUID().uuidString)"
     let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))

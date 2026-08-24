@@ -9,11 +9,21 @@ struct LocationSettingsSection: View {
   @State private var manualLabel: String
 
   init(model: AppModel) {
+    let formatter = ManualLocationParser()
+    let locale = model.localizer.locale
+
     self.model = model
     _latitudeText = State(
-      initialValue: Self.coordinateText(model.settings.manualCoordinates?.latitude))
+      initialValue: formatter.coordinateText(
+        model.settings.manualCoordinates?.latitude,
+        locale: locale
+      )
+    )
     _longitudeText = State(
-      initialValue: Self.coordinateText(model.settings.manualCoordinates?.longitude)
+      initialValue: formatter.coordinateText(
+        model.settings.manualCoordinates?.longitude,
+        locale: locale
+      )
     )
     _manualLabel = State(initialValue: model.settings.manualLocationLabel ?? "")
   }
@@ -118,13 +128,5 @@ struct LocationSettingsSection: View {
     case .notConfigured, .denied, .restricted, .failed, .invalidManualInput:
       return "exclamationmark.triangle"
     }
-  }
-
-  private static func coordinateText(_ value: Double?) -> String {
-    guard let value else {
-      return ""
-    }
-
-    return String(format: "%.6f", value)
   }
 }

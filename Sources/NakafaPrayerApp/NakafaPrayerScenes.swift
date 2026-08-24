@@ -51,7 +51,12 @@ public struct NakafaPrayerScenes: Scene {
 /// AppKit delegate for macOS activation policy and termination guard.
 @MainActor
 public final class AppDelegate: NSObject, NSApplicationDelegate {
+  /// The model retained by the app entrypoint and assigned before launch finishes.
+  /// This reference is weak so the delegate does not own the SwiftUI app state.
   public static weak var model: AppModel?
+
+  /// The optional updater retained by the direct-download entrypoint.
+  /// Assign it before launch finishes; App Store builds leave it unset.
   public static weak var updateController: (any AppUpdateController)?
 
   public func applicationDidFinishLaunching(_ notification: Notification) {

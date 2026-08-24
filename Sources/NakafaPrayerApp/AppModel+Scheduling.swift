@@ -85,6 +85,18 @@ extension AppModel {
     }
 
     observers.append(
+      center.addObserver(
+        forName: NSApplication.didBecomeActiveNotification,
+        object: nil,
+        queue: .main
+      ) { [weak self] _ in
+        Task { @MainActor in
+          self?.reconcileSchedule()
+        }
+      }
+    )
+
+    observers.append(
       NSWorkspace.shared.notificationCenter.addObserver(
         forName: NSWorkspace.didWakeNotification,
         object: nil,
