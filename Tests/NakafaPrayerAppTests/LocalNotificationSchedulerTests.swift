@@ -75,10 +75,10 @@ final class LocalNotificationSchedulerTests: XCTestCase {
   func testReconciliationAddsDesiredRequestsBeforeRemovingOwnedStaleRequests() async {
     let client = FakeNotificationCenterClient()
     client.systemSettings = .authorized
-    client.pending = [
-      Self.request(identifier: "ai.nakafa.prayer.v1.2026-08-24.fajr"),
-      Self.request(identifier: "ai.nakafa.prayer.v1.2026-08-23.isha"),
-      Self.request(identifier: "another.app.request"),
+    client.pendingIdentifiers = [
+      "ai.nakafa.prayer.v1.2026-08-24.fajr",
+      "ai.nakafa.prayer.v1.2026-08-23.isha",
+      "another.app.request",
     ]
     let scheduler = LocalNotificationScheduler(client: client, calendar: .gregorianUTC)
     let occurrence = PrayerOccurrence(
@@ -110,9 +110,9 @@ final class LocalNotificationSchedulerTests: XCTestCase {
       alertsEnabled: false,
       soundEnabled: false
     )
-    client.pending = [
-      Self.request(identifier: "ai.nakafa.prayer.v1.2026-08-24.fajr"),
-      Self.request(identifier: "another.app.request"),
+    client.pendingIdentifiers = [
+      "ai.nakafa.prayer.v1.2026-08-24.fajr",
+      "another.app.request",
     ]
     let scheduler = LocalNotificationScheduler(client: client, calendar: .gregorianUTC)
 
@@ -136,9 +136,7 @@ final class LocalNotificationSchedulerTests: XCTestCase {
       alertsEnabled: false,
       soundEnabled: false
     )
-    client.pending = [
-      Self.request(identifier: "ai.nakafa.prayer.v1.2026-08-24.fajr")
-    ]
+    client.pendingIdentifiers = ["ai.nakafa.prayer.v1.2026-08-24.fajr"]
     let scheduler = LocalNotificationScheduler(client: client, calendar: .gregorianUTC)
 
     let task = Task { @MainActor in
@@ -158,9 +156,7 @@ final class LocalNotificationSchedulerTests: XCTestCase {
     let client = FakeNotificationCenterClient()
     client.systemSettings = .authorized
     client.addError = TestError.failed
-    client.pending = [
-      Self.request(identifier: "ai.nakafa.prayer.v1.2026-08-23.isha")
-    ]
+    client.pendingIdentifiers = ["ai.nakafa.prayer.v1.2026-08-23.isha"]
     let scheduler = LocalNotificationScheduler(client: client, calendar: .gregorianUTC)
     let occurrence = PrayerOccurrence(
       id: PrayerOccurrenceID(rawValue: "2026-08-24.fajr"),
@@ -178,13 +174,6 @@ final class LocalNotificationSchedulerTests: XCTestCase {
     XCTAssertTrue(client.events.isEmpty)
   }
 
-  private static func request(identifier: String) -> UNNotificationRequest {
-    UNNotificationRequest(
-      identifier: identifier,
-      content: UNMutableNotificationContent(),
-      trigger: nil
-    )
-  }
 }
 
 @MainActor
@@ -201,7 +190,7 @@ private final class FakeNotificationCenterClient: NotificationCenterClient {
   )
   var settingsAfterPermissionRequest: NotificationSystemSettings?
   var authorizationError: Error?
-  var pending: [UNNotificationRequest] = []
+  var pendingIdentifiers: [String] = []
   var addError: Error?
   var authorizationRequestCount = 0
   var events: [Event] = []
@@ -220,8 +209,8 @@ private final class FakeNotificationCenterClient: NotificationCenterClient {
     }
   }
 
-  func pendingRequests() async -> [UNNotificationRequest] {
-    pending
+  func pendingRequestIdentifiers() async -> [String] {
+    pendingIdentifiers
   }
 
   func add(_ request: UNNotificationRequest) async throws {

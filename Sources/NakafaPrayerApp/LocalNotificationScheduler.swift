@@ -36,7 +36,7 @@ struct NotificationSystemSettings: Equatable, Sendable {
 protocol NotificationCenterClient: AnyObject {
   func settings() async -> NotificationSystemSettings
   func requestAuthorization() async throws
-  func pendingRequests() async -> [UNNotificationRequest]
+  func pendingRequestIdentifiers() async -> [String]
   func add(_ request: UNNotificationRequest) async throws
   func removePendingRequests(withIdentifiers identifiers: [String])
 }
@@ -111,9 +111,9 @@ final class LocalNotificationScheduler {
         playSound: adhanEnabled && state != .soundDisabled
       )
     }
-    let pendingRequests = await client.pendingRequests()
+    let pendingIdentifiers = await client.pendingRequestIdentifiers()
     let pendingOwnedIdentifiers = Set(
-      pendingRequests.map(\.identifier).filter { $0.hasPrefix(Self.identifierPrefix) }
+      pendingIdentifiers.filter { $0.hasPrefix(Self.identifierPrefix) }
     )
     let desiredIdentifiers = Set(desiredRequests.map(\.identifier))
     let reconciliation = NotificationReconciliation.make(
@@ -147,12 +147,12 @@ final class LocalNotificationScheduler {
       return
     }
 
-    let pending = await client.pendingRequests()
+    let pendingIdentifiers = await client.pendingRequestIdentifiers()
     guard Task.isCancelled == false else {
       return
     }
 
-    let identifiers = pending.map(\.identifier).filter {
+    let identifiers = pendingIdentifiers.filter {
       $0.hasPrefix(Self.identifierPrefix)
     }
     client.removePendingRequests(withIdentifiers: identifiers)
@@ -229,33 +229,42 @@ private final class SystemNotificationCenterClient: NotificationCenterClient {
   }
 
   func settings() async -> NotificationSystemSettings {
-    let settings = await center.notificationSettings()
-    let authorization: NotificationSystemSettings.Authorization
+    await withCheckedContinuation { continuation in
+      center.getNotificationSettings { settings in
+        let authorization: NotificationSystemSettings.Authorization
 
-    switch settings.authorizationStatus {
-    case .notDetermined:
-      authorization = .notDetermined
-    case .denied:
-      authorization = .denied
-    case .authorized, .provisional, .ephemeral:
-      authorization = .authorized
-    @unknown default:
-      authorization = .denied
+        switch settings.authorizationStatus {
+        case .notDetermined:
+          authorization = .notDetermined
+        case .denied:
+          authorization = .denied
+        case .authorized, .provisional, .ephemeral:
+          authorization = .authorized
+        @unknown default:
+          authorization = .denied
+        }
+
+        continuation.resume(
+          returning: NotificationSystemSettings(
+            authorization: authorization,
+            alertsEnabled: settings.alertSetting != .disabled,
+            soundEnabled: settings.soundSetting != .disabled
+          )
+        )
+      }
     }
-
-    return NotificationSystemSettings(
-      authorization: authorization,
-      alertsEnabled: settings.alertSetting != .disabled,
-      soundEnabled: settings.soundSetting != .disabled
-    )
   }
 
   func requestAuthorization() async throws {
     _ = try await center.requestAuthorization(options: [.alert, .sound])
   }
 
-  func pendingRequests() async -> [UNNotificationRequest] {
-    await center.pendingNotificationRequests()
+  func pendingRequestIdentifiers() async -> [String] {
+    await withCheckedContinuation { continuation in
+      center.getPendingNotificationRequests { requests in
+        continuation.resume(returning: requests.map(\.identifier))
+      }
+    }
   }
 
   func add(_ request: UNNotificationRequest) async throws {
