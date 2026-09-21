@@ -58,7 +58,7 @@ export function LocationPanel({ onChangeLocation }: { onChangeLocation: () => vo
   const offsetRemainder = String(Math.abs(offsetMinutes) % 60).padStart(2, '0')
 
   return (
-    <Panel className="overflow-hidden">
+    <Panel className="flex h-full flex-col overflow-hidden">
       <PanelHeader>
         <h2 className="text-sm font-semibold tracking-tight">{t.location}</h2>
         <Button variant="outline" size="sm" onClick={onChangeLocation}>

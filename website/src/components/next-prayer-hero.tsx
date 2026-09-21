@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { formatClock, formatFullDate, formatHijriDate } from '@/lib/format'
 import { MESSAGES, PRAYER_NAMES } from '@/lib/i18n'
 import { civilDateIn, civilDateKey } from '@/lib/prayer'
-import { DayDial } from './day-dial'
+import { DayClock } from './clock/day-clock'
 import { usePrayerClock, usePrayerSchedule } from './prayer-context'
 import { Button } from './ui/button'
 
@@ -122,7 +122,7 @@ export function NextPrayerHero() {
         </div>
 
         <div className="w-full max-w-72 lg:justify-self-end">
-          <DayDial />
+          <DayClock />
         </div>
       </div>
     </section>

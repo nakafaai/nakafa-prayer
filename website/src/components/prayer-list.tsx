@@ -18,7 +18,7 @@ export function PrayerList() {
   }
 
   return (
-    <Panel className="overflow-hidden">
+    <Panel className="flex h-full flex-col overflow-hidden">
       <PanelHeader>
         <div className="flex items-baseline gap-2">
           <h2 className="text-sm font-semibold tracking-tight">{t.todaySchedule}</h2>
@@ -28,7 +28,7 @@ export function PrayerList() {
         </div>
       </PanelHeader>
 
-      <ul className="divide-y divide-border">
+      <ul className="flex flex-1 flex-col divide-y divide-border">
         {today.prayers.map((prayer) => {
           // Compare instants, not ids: after Isha the next prayer is tomorrow's
           // Fajr, and today's Fajr row must not claim it.
@@ -40,7 +40,7 @@ export function PrayerList() {
             <li
               key={prayer.id}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 sm:px-5',
+                'flex flex-1 items-center gap-3 px-4 py-3 sm:px-5',
                 isNext && 'bg-muted',
                 isCurrent && 'bg-primary/5',
               )}

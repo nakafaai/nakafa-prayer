@@ -41,7 +41,7 @@ function SiteShell() {
           <NextPrayerHero />
 
           <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-12">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
               {state.unavailable ? <UnavailableNotice /> : <PrayerList />}
               <LocationPanel onChangeLocation={settings.open} />
             </div>
