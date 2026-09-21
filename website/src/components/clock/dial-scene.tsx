@@ -289,7 +289,12 @@ function Scene({ view, theme, motion }: SceneProps) {
 
   return (
     <>
-      <CameraRig position={[0, 3.28, 2.3]} target={[0, -0.06, 0]} />
+      {/*
+       * Framing is deliberate: a tilted disc is widest horizontally, and the
+       * canvas is square, so the camera distance is set by the dial's diameter
+       * plus its shadow. Closer than this clips the rim at the left and right.
+       */}
+      <CameraRig position={[0, 4.5, 2.6]} target={[0, -0.06, 0]} />
 
       <hemisphereLight args={[palette.rim, palette.fill, 0.5]} />
       <directionalLight
