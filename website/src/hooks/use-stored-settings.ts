@@ -41,8 +41,8 @@ export function useStoredSettings() {
 /**
  * Appearance preference, stored as a bare string.
  *
- * The inline script in `index.html` reads this same key before the first paint,
- * which is what keeps a dark visitor from seeing a white flash.
+ * The `theme-init.js` script in `index.html` reads this same key before the
+ * first paint, which is what keeps a dark visitor from seeing a white flash.
  */
 export function useStoredTheme() {
   return useLocalStorage<ThemePreference>({

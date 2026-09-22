@@ -16,19 +16,11 @@
       content="Prayer times for your location, calculated on your device."
     />
     <meta property="og:type" content="website" />
-    <script>
-      ;(() => {
-        try {
-          const stored = localStorage.getItem('nakafa-prayer.theme')
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          const dark = stored === 'dark' || ((stored === null || stored === 'system') && prefersDark)
-          document.documentElement.classList.toggle('dark', dark)
-          document.getElementById('theme-color')?.setAttribute('content', dark ? '#060d18' : '#ffffff')
-        } catch {
-          /* A blocked storage API only costs the stored preference. */
-        }
-      })()
-    </script>
+    <!--
+      Served from /theme-init.js rather than inline: the hosting runtime sends
+      `script-src 'self'`, which blocks inline scripts.
+    -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>
