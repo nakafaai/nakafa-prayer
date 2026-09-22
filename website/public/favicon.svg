@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Nakafa Prayer">
+  <rect width="32" height="32" rx="8" fill="#15294f" />
+  <mask id="crescent">
+    <rect width="32" height="32" fill="#ffffff" />
+    <circle cx="21.5" cy="13.5" r="8.5" fill="#000000" />
+  </mask>
+  <circle cx="16" cy="16" r="9" fill="#ffffff" mask="url(#crescent)" />
+  <circle cx="24" cy="9" r="1.7" fill="#ffffff" />
+</svg>

@@ -1,0 +1,14 @@
+version: 1
+project: nakafa-prayer-website
+build:
+  install: pnpm install --frozen-lockfile --ignore-scripts
+  command: pnpm run build
+  output: dist
+runtime:
+  mode: static
+database:
+  enabled: false
+auth:
+  provider: none
+mail:
+  enabled: false

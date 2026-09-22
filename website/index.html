@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" id="theme-color" content="#ffffff" />
+    <title>Nakafa Prayer | Prayer times for your location</title>
+    <meta
+      name="description"
+      content="See today's Fajr, Dhuhr, Asr, Maghrib and Isha times. Prayer times are calculated on your device, so your location never leaves it."
+    />
+    <meta property="og:title" content="Nakafa Prayer" />
+    <meta
+      property="og:description"
+      content="Prayer times for your location, calculated on your device."
+    />
+    <meta property="og:type" content="website" />
+    <script>
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('nakafa-prayer.theme')
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const dark = stored === 'dark' || ((stored === null || stored === 'system') && prefersDark)
+          document.documentElement.classList.toggle('dark', dark)
+          document.getElementById('theme-color')?.setAttribute('content', dark ? '#060d18' : '#ffffff')
+        } catch {
+          /* A blocked storage API only costs the stored preference. */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

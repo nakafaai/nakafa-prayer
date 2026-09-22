@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Nakafa design tokens, following shadcn's CSS variable model.
+ * Source of truth: packages/design-system/styles/globals.css in nakafa.com.
+ */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.21033 0.00586 285.89);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13706 0.03597 258.53);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13706 0.03597 258.53);
+  --primary: oklch(0.28693 0.0744 261.92);
+  --primary-foreground: oklch(0.98383 0.00348 247.86);
+  --secondary: oklch(0.77498 0.1318 224.26);
+  --secondary-foreground: oklch(0.21033 0.00586 285.89);
+  --muted: oklch(0.96844 0.00682 247.9);
+  --muted-foreground: oklch(0.535 0.04071 257.44);
+  --accent: oklch(0.92682 0.01559 248);
+  --accent-foreground: oklch(0.20792 0.03991 265.73);
+  --destructive: oklch(0.56 0.21808 17.703);
+  --destructive-foreground: oklch(0.98383 0.00348 247.86);
+  --success: oklch(0.765 0.115 174);
+  --success-foreground: oklch(0.13706 0.03597 258.53);
+  --warning: oklch(0.825 0.135 83);
+  --warning-foreground: oklch(0.13706 0.03597 258.53);
+  --info: oklch(0.755 0.125 230);
+  --info-foreground: oklch(0.13706 0.03597 258.53);
+  --border: oklch(0.88 0.012 252.84);
+  --input: oklch(0.86 0.012 252.84);
+  --ring: oklch(0.28693 0.0744 261.92);
+  --chart-1: oklch(0.28693 0.0744 261.92);
+  --chart-2: oklch(0.64275 0.12097 224.26);
+  --chart-3: oklch(0.62517 0.21808 17.703);
+  --chart-4: oklch(0.6625 0.13622 82.951);
+  --chart-5: oklch(0.64475 0.11554 181.92);
+  --radius: 1rem;
+  color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.15715 0.02743 260.75);
+  --foreground: oklch(0.96742 0.00133 286.37);
+  --card: oklch(0.13706 0.03597 258.53);
+  --card-foreground: oklch(0.98383 0.00348 247.86);
+  --popover: oklch(0.13706 0.03597 258.53);
+  --popover-foreground: oklch(0.98383 0.00348 247.86);
+  --primary: oklch(0.77498 0.1318 224.26);
+  --primary-foreground: oklch(0.21033 0.00586 285.89);
+  --secondary: oklch(0.28693 0.0744 261.92);
+  --secondary-foreground: oklch(0.96742 0.00133 286.37);
+  --muted: oklch(0.19328 0.0414 262.21);
+  --muted-foreground: oklch(0.7107 0.03507 256.79);
+  --accent: oklch(0.28001 0.03693 259.97);
+  --accent-foreground: oklch(0.98383 0.00348 247.86);
+  --destructive: oklch(0.62517 0.21808 17.703);
+  --destructive-foreground: oklch(0.13706 0.03597 258.53);
+  --success: oklch(0.735 0.125 178);
+  --success-foreground: oklch(0.13706 0.03597 258.53);
+  --warning: oklch(0.79 0.14 86);
+  --warning-foreground: oklch(0.13706 0.03597 258.53);
+  --info: oklch(0.73 0.13 224);
+  --info-foreground: oklch(0.13706 0.03597 258.53);
+  --border: oklch(0.255 0.03 260.75);
+  --input: oklch(0.275 0.03 260.75);
+  --ring: oklch(0.77498 0.1318 224.26);
+  --chart-1: oklch(0.77498 0.1318 224.26);
+  --chart-2: oklch(0.704 0.17 17.703);
+  --chart-3: oklch(0.83243 0.13955 82.951);
+  --chart-4: oklch(0.78452 0.13253 181.92);
+  --chart-5: oklch(0.72 0.14 285);
+  --radius: 1rem;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  /* Strong curves. The built-in CSS easings are too weak for UI. */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  /* Suppress transitions while the theme flips, then restore them. */
+  .theme-transition-off,
+  .theme-transition-off *,
+  .theme-transition-off *::before,
+  .theme-transition-off *::after {
+    transition: none !important;
+  }
+
+  /* Hover motion is gated: a touch tap fires hover on the way in and out. */
+  @media (hover: hover) and (pointer: fine) {
+    .hover-lift {
+      transition: background-color 150ms ease;
+    }
+
+    .hover-lift:hover {
+      background-color: var(--muted);
+    }
+  }
+
+  /*
+   * Reduced motion keeps opacity and colour, and drops the movement. The dial
+   * hand still steps to its position, it just does not sweep.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .prayer-swap,
+    .dial-hand {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * Press feedback. Colour changes take the plain curve at 150ms; the press
+ * transform takes the strong curve at 160ms, and only transform animates.
+ */
+@utility pressable {
+  transition-property: color, background-color, border-color, box-shadow, transform, scale;
+  transition-duration: 150ms, 150ms, 150ms, 150ms, 160ms, 160ms;
+  transition-timing-function:
+    ease, ease, ease, ease, var(--ease-out-strong), var(--ease-out-strong);
+
+  &:active {
+    scale: 0.97;
+  }
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
+ * The next prayer changes at most five times a day, so a short blur-masked
+ * crossfade earns its cost. Blur bridges two states that would otherwise read
+ * as two objects swapping.
+ */
+@keyframes prayer-swap {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.prayer-swap {
+  animation: prayer-swap 300ms var(--ease-out-strong) both;
+}
+
+/* Constant motion, so linear. Interruptible, so a transition, not keyframes. */
+.dial-hand {
+  transition: transform 1s linear;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Occasional surfaces: modals, menus and tooltips. */
+.dialog-overlay[data-state='open'] {
+  animation: overlay-in 180ms ease;
+}
+
+.dialog-overlay[data-state='closed'] {
+  animation: overlay-out 140ms ease;
+}
+
+/* A modal is not anchored to a trigger, so it scales from its own centre. */
+.dialog-content[data-state='open'] {
+  animation: dialog-in 220ms var(--ease-out-strong);
+}
+
+.dialog-content[data-state='closed'] {
+  animation: dialog-out 160ms var(--ease-out-strong);
+}
+
+/* Menus and tooltips scale from the trigger they belong to. */
+.select-content[data-state='open'] {
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: menu-in 150ms var(--ease-out-strong);
+}
+
+.tooltip-content {
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  transition:
+    opacity 125ms var(--ease-out-strong),
+    transform 125ms var(--ease-out-strong);
+}
+
+@starting-style {
+  .tooltip-content {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-overlay[data-state],
+  .dialog-content[data-state],
+  .select-content[data-state] {
+    animation: none;
+  }
+
+  .tooltip-content {
+    transition: opacity 100ms ease;
+  }
+
+  @starting-style {
+    .tooltip-content {
+      opacity: 0;
+      transform: none;
+    }
+  }
+}
