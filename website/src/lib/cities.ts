@@ -1,3 +1,7 @@
+import type { LanguageId } from './i18n'
+import type { SiteLocation } from './settings-schema'
+import { loadedWorldCities, normalizeForSearch, worldCityChoice } from './world-cities'
+
 /** Countries offered in the location picker, named in both site languages. */
 export const COUNTRIES = {
   ID: { en: 'Indonesia', id: 'Indonesia' },
@@ -47,6 +51,9 @@ export const COUNTRIES = {
 
 export type CountryCode = keyof typeof COUNTRIES
 
+/** The same table for a code that arrives as an unconstrained string. */
+const COUNTRIES_BY_CODE: Record<string, { en: string; id: string } | undefined> = COUNTRIES
+
 export type City = {
   id: string
   name: string
@@ -59,7 +66,8 @@ export type City = {
 /** City whose clock is the neutral fallback when no time zone matches. */
 export const FALLBACK_CITY_ID = 'makkah'
 
-export const CITIES: City[] = [
+/** Curated cities shown before a search, and used for the first-paint default. */
+export const POPULAR_CITIES: City[] = [
   { id: 'jakarta', name: 'Jakarta', country: 'ID', latitude: -6.2088, longitude: 106.8456, timeZone: 'Asia/Jakarta' },
   { id: 'surabaya', name: 'Surabaya', country: 'ID', latitude: -7.2575, longitude: 112.7521, timeZone: 'Asia/Jakarta' },
   { id: 'bandung', name: 'Bandung', country: 'ID', latitude: -6.9175, longitude: 107.6191, timeZone: 'Asia/Jakarta' },
@@ -141,7 +149,7 @@ export const CITIES: City[] = [
 ]
 
 export function findCity(id: string | undefined): City | undefined {
-  return id ? CITIES.find((city) => city.id === id) : undefined
+  return id ? POPULAR_CITIES.find((city) => city.id === id) : undefined
 }
 
 /**
@@ -152,16 +160,18 @@ export function findCity(id: string | undefined): City | undefined {
  * precise location.
  */
 export function defaultCityForTimeZone(timeZone: string): City {
-  const exact = CITIES.find((city) => city.timeZone === timeZone)
+  const exact = POPULAR_CITIES.find((city) => city.timeZone === timeZone)
   if (exact) {
     return exact
   }
 
   const now = new Date()
   const offset = utcOffsetMinutes(timeZone, now)
-  const sameOffset = CITIES.find((city) => utcOffsetMinutes(city.timeZone, now) === offset)
+  const sameOffset = POPULAR_CITIES.find(
+    (city) => utcOffsetMinutes(city.timeZone, now) === offset,
+  )
 
-  return sameOffset ?? findCity(FALLBACK_CITY_ID) ?? CITIES[0]
+  return sameOffset ?? findCity(FALLBACK_CITY_ID) ?? POPULAR_CITIES[0]
 }
 
 /** Offset from UTC in minutes for a time zone at a given instant. */
@@ -200,11 +210,14 @@ export function nearestCity(
   latitude: number,
   longitude: number,
   maxDistanceKm = 500,
-): City | undefined {
-  let nearest: City | undefined
+): CityChoice | undefined {
+  const world = loadedWorldCities()
+  const pool: CityChoice[] =
+    world?.map(worldCityChoice) ?? POPULAR_CITIES.map(popularCityChoice)
+  let nearest: CityChoice | undefined
   let nearestDistance = Number.POSITIVE_INFINITY
 
-  for (const city of CITIES) {
+  for (const city of pool) {
     const distance = haversineKm(latitude, longitude, city.latitude, city.longitude)
     if (distance < nearestDistance) {
       nearest = city
@@ -227,7 +240,119 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return 2 * earthRadiusKm * Math.asin(Math.min(Math.sqrt(a), 1))
 }
 
-/** Display name for a city, localized by country name. */
-export function cityLabel(city: City, language: 'en' | 'id'): string {
+/** Display name for a curated city, localized by country name. */
+export function cityLabel(city: City, language: LanguageId): string {
   return `${city.name}, ${COUNTRIES[city.country][language]}`
+}
+
+/** Display name for a chosen place, localized by country name. */
+export function cityChoiceLabel(choice: CityChoice, language: LanguageId): string {
+  const country = countryName(choice.countryCode, choice.countryName, language)
+  return country ? `${choice.cityName}, ${country}` : choice.cityName
+}
+
+/**
+ * The label to show for a stored location.
+ *
+ * City parts are stored, so the label follows a language change instead of
+ * being frozen in the language that was active when it was chosen.
+ */
+export function resolveLocationLabel(location: SiteLocation, language: LanguageId): string {
+  if (!location.cityName) {
+    return location.label
+  }
+
+  return cityChoiceLabel(
+    {
+      cityName: location.cityName,
+      countryCode: location.countryCode,
+      countryName: location.countryName,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      timeZone: location.timeZone,
+    },
+    language,
+  )
+}
+
+/** A chosen place, from the curated list, the world dataset or coordinates. */
+export type CityChoice = {
+  cityId?: string
+  cityName: string
+  province?: string
+  countryCode?: string
+  countryName?: string
+  latitude: number
+  longitude: number
+  timeZone: string
+}
+
+export function popularCityChoice(city: City): CityChoice {
+  return {
+    cityId: city.id,
+    cityName: city.name,
+    countryCode: city.country,
+    countryName: COUNTRIES[city.country].en,
+    latitude: city.latitude,
+    longitude: city.longitude,
+    timeZone: city.timeZone,
+  }
+}
+
+/**
+ * Alternate spellings the world dataset does not carry.
+ *
+ * Most of these are the Indonesian or older forms of a city name, which is
+ * exactly what this audience types.
+ */
+const CITY_SEARCH_ALIASES: ReadonlyArray<readonly [string, string]> = [
+  ['mekkah', 'Makkah'],
+  ['mekah', 'Makkah'],
+  ['mecca', 'Makkah'],
+  ['madinah', 'Medina'],
+  ['medinah', 'Medina'],
+  ['jogja', 'Yogyakarta'],
+  ['jogjakarta', 'Yogyakarta'],
+  ['kairo', 'Cairo'],
+  ['surabaja', 'Surabaya'],
+  ['bombay', 'Mumbai'],
+  ['calcutta', 'Kolkata'],
+  ['peking', 'Beijing'],
+  ['saigon', 'Ho Chi Minh City'],
+  ['rangoon', 'Yangon'],
+  ['urumqi', 'Urumqi'],
+  ['den haag', 'The Hague'],
+  ['munchen', 'Munich'],
+  ['wina', 'Vienna'],
+  ['roma', 'Rome'],
+  ['lisboa', 'Lisbon'],
+]
+
+/** The query plus any canonical names its alternate spellings point at. */
+export function expandCityQuery(query: string): string[] {
+  const needle = normalizeForSearch(query)
+
+  if (needle.length === 0) {
+    return []
+  }
+
+  const targets = CITY_SEARCH_ALIASES.filter(([alias]) => alias.startsWith(needle)).map(
+    ([, target]) => target,
+  )
+
+  return [query, ...targets]
+}
+
+/** Localized country name when this site knows it, otherwise the dataset's. */
+export function countryName(
+  countryCode: string | undefined,
+  fallback: string | undefined,
+  language: LanguageId,
+): string | undefined {
+  if (!countryCode) {
+    return fallback
+  }
+
+  const entry = COUNTRIES_BY_CODE[countryCode]
+  return entry ? entry[language] : fallback
 }

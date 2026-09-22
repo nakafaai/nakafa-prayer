@@ -1,7 +1,7 @@
 import { formatClock } from '@/lib/format'
 import { MESSAGES } from '@/lib/i18n'
 import { usePrayerSchedule } from '../prayer-context'
-import type { DialView } from './dial-view'
+import { HOUR_MARK_COUNT, isMajorHourMark, type DialView } from './dial-view'
 
 const SIZE = 220
 const CENTER = SIZE / 2
@@ -23,12 +23,13 @@ function pointAt(fraction: number, radius: number) {
 export function DialFlat({ view, clockTime }: { view: DialView; clockTime: Date }) {
   const { state } = usePrayerSchedule()
   const t = MESSAGES[state.settings.language]
-  const today = state.week[0]
 
-  const arcStart = view.nextIndex === null ? 0 : (view.markers[view.nextIndex - 1] ?? 0)
+  const arcStart =
+    view.nextIndex === null ? 0 : (view.markers[view.nextIndex - 1]?.fraction ?? 0)
   const nowPoint = pointAt(view.fraction, RADIUS)
   const previousPoint = pointAt(arcStart, RADIUS)
   const largeArc = view.fraction - arcStart > 0.5 ? 1 : 0
+  const litMarks = Math.min(HOUR_MARK_COUNT, Math.floor(view.fraction * HOUR_MARK_COUNT) + 1)
 
   return (
     <svg
@@ -46,6 +47,27 @@ export function DialFlat({ view, clockTime }: { view: DialView; clockTime: Date 
         strokeWidth={1}
         className="text-border"
       />
+
+      {Array.from({ length: HOUR_MARK_COUNT }, (_, index) => {
+        const fraction = index / HOUR_MARK_COUNT
+        const length = isMajorHourMark(index) ? 13 : 8
+        const outer = pointAt(fraction, RADIUS)
+        const inner = pointAt(fraction, RADIUS - length)
+
+        return (
+          <line
+            key={`hour-${index}`}
+            x1={inner.x}
+            y1={inner.y}
+            x2={outer.x}
+            y2={outer.y}
+            stroke="currentColor"
+            strokeWidth={isMajorHourMark(index) ? 2 : 1.5}
+            strokeLinecap="round"
+            className={index < litMarks ? 'text-primary/45' : 'text-muted-foreground/45'}
+          />
+        )
+      })}
 
       {view.fraction > 0.001 ? (
         <path
@@ -71,20 +93,20 @@ export function DialFlat({ view, clockTime }: { view: DialView; clockTime: Date 
         />
       ) : null}
 
-      {view.markers.map((fraction, index) => {
-        const outer = pointAt(fraction, RADIUS)
-        const inner = pointAt(fraction, RADIUS - 11)
+      {view.markers.map((marker, index) => {
+        const outer = pointAt(marker.fraction, RADIUS)
+        const inner = pointAt(marker.fraction, RADIUS - 22)
         const isNext = index === view.nextIndex
 
         return (
           <line
-            key={today?.prayers[index]?.id ?? index}
+            key={marker.id}
             x1={inner.x}
             y1={inner.y}
             x2={outer.x}
             y2={outer.y}
             stroke="currentColor"
-            strokeWidth={isNext ? 3 : 2}
+            strokeWidth={isNext ? 3.5 : 2.5}
             strokeLinecap="round"
             className={isNext ? 'text-primary' : 'text-muted-foreground'}
           />

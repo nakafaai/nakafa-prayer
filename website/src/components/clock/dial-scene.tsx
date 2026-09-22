@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react'
 import { MathUtils, Object3D, type Group, type InstancedMesh } from 'three'
-import { DAY_TICK_COUNT, type DialView } from './dial-view'
+import { HOUR_MARK_COUNT, isMajorHourMark, type DialView } from './dial-view'
 
 /** Material colours, taken from the Nakafa tokens as hex for the WebGL pipeline. */
 export type DialPalette = {
@@ -45,8 +45,8 @@ const PALETTE: Record<'light' | 'dark', DialPalette> = {
 const BODY_RADIUS = 1
 const BODY_TOP = 0.04
 const TICK_RADIUS = 0.95
-const MARKER_RADIUS = 0.85
-const PLATFORM_RADIUS = 0.74
+const MARKER_RADIUS = 0.82
+const PLATFORM_RADIUS = 0.7
 const PLATFORM_TOP = 0.058
 const HAND_TOP = 0.068
 
@@ -67,7 +67,7 @@ function placeOnDial(fraction: number, radius: number, height: number): [number,
   return [Math.sin(angle) * radius, height, -Math.cos(angle) * radius]
 }
 
-function TickRing({
+function HourMarks({
   litTicks,
   color,
   showRemaining,
@@ -83,14 +83,15 @@ function TickRing({
     const ring = mesh.current
     if (!ring) return
 
-    for (let index = 0; index < DAY_TICK_COUNT; index += 1) {
+    for (let index = 0; index < HOUR_MARK_COUNT; index += 1) {
       const passed = index < litTicks
       const visible = showRemaining ? !passed : passed
-      const fraction = index / DAY_TICK_COUNT
+      const fraction = index / HOUR_MARK_COUNT
 
       scratch.position.set(...placeOnDial(fraction, TICK_RADIUS, BODY_TOP + 0.005))
       scratch.rotation.set(0, -fraction * Math.PI * 2, 0)
-      scratch.scale.setScalar(visible ? 1 : 0)
+      // A hidden mark collapses to nothing; a major mark reaches further in.
+      scratch.scale.set(1, 1, visible ? (isMajorHourMark(index) ? 1.5 : 1) : 0)
       scratch.updateMatrix()
       ring.setMatrixAt(index, scratch.matrix)
     }
@@ -99,8 +100,8 @@ function TickRing({
   }, [litTicks, showRemaining])
 
   return (
-    <instancedMesh ref={mesh} args={[undefined, undefined, DAY_TICK_COUNT]}>
-      <boxGeometry args={[0.014, 0.016, 0.05]} />
+    <instancedMesh ref={mesh} args={[undefined, undefined, HOUR_MARK_COUNT]}>
+      <boxGeometry args={[0.018, 0.016, 0.06]} />
       <meshStandardMaterial color={color} roughness={0.5} metalness={0.05} />
     </instancedMesh>
   )
@@ -109,14 +110,14 @@ function TickRing({
 function PrayerMarkers({ view, palette }: { view: DialView; palette: DialPalette }) {
   return (
     <>
-      {view.markers.map((fraction, index) => {
+      {view.markers.map((marker, index) => {
         const isNext = index === view.nextIndex
 
         return (
           <mesh
-            key={index}
-            position={placeOnDial(fraction, MARKER_RADIUS, BODY_TOP + 0.008)}
-            rotation={[0, -fraction * Math.PI * 2, 0]}
+            key={marker.id}
+            position={placeOnDial(marker.fraction, MARKER_RADIUS, BODY_TOP + 0.008)}
+            rotation={[0, -marker.fraction * Math.PI * 2, 0]}
             castShadow
           >
             <boxGeometry args={[0.036, 0.022, isNext ? 0.17 : 0.12]} />
@@ -284,7 +285,7 @@ function DialBody({ palette }: { palette: DialPalette }) {
 
 function Scene({ view, theme, motion }: SceneProps) {
   const palette = PALETTE[theme]
-  const litTicks = Math.min(DAY_TICK_COUNT, Math.floor(view.fraction * DAY_TICK_COUNT) + 1)
+  const litTicks = Math.min(HOUR_MARK_COUNT, Math.floor(view.fraction * HOUR_MARK_COUNT) + 1)
   const handAngle = -(view.dayIndex + view.fraction) * Math.PI * 2
 
   return (
@@ -315,8 +316,8 @@ function Scene({ view, theme, motion }: SceneProps) {
 
       <PointerParallax enabled={motion === 'damped'}>
         <DialBody palette={palette} />
-        <TickRing litTicks={litTicks} color={palette.tick} showRemaining />
-        <TickRing litTicks={litTicks} color={palette.lit} showRemaining={false} />
+        <HourMarks litTicks={litTicks} color={palette.tick} showRemaining />
+        <HourMarks litTicks={litTicks} color={palette.lit} showRemaining={false} />
         <PrayerMarkers view={view} palette={palette} />
         <SweepingHand angle={handAngle} motion={motion} palette={palette} />
       </PointerParallax>

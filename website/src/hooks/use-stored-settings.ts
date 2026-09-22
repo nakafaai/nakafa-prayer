@@ -3,24 +3,12 @@ import { Option } from 'effect'
 import { useMemo } from 'react'
 import { SETTINGS_STORAGE_KEY, THEME_STORAGE_KEY, createDefaultSettings, withUsableLocation } from '@/lib/settings'
 import {
-  decodeSettings,
+  decodeStoredSettings,
   decodeTheme,
   encodeSettings,
   type PrayerSettings,
   type ThemePreference,
 } from '@/lib/settings-schema'
-
-function parseJson(raw: string | undefined): unknown {
-  if (raw === undefined) {
-    return undefined
-  }
-
-  try {
-    return JSON.parse(raw)
-  } catch {
-    return undefined
-  }
-}
 
 /**
  * Prayer settings in `localStorage`, decoded through the Effect schema.
@@ -35,15 +23,17 @@ export function useStoredSettings() {
     key: SETTINGS_STORAGE_KEY,
     defaultValue: fallback,
     getInitialValueInEffect: false,
-    serialize: (value) => JSON.stringify(encodeSettings(value)),
-    deserialize: (raw) => {
-      const parsed = parseJson(raw)
-
-      if (parsed === undefined) {
-        return fallback
+    serialize: (value) => {
+      try {
+        return JSON.stringify(encodeSettings(value))
+      } catch {
+        // Storage must never be able to blank the page: keep whatever is
+        // already stored instead of throwing during render.
+        return localStorage.getItem(SETTINGS_STORAGE_KEY) ?? JSON.stringify(encodeSettings(fallback))
       }
-
-      return withUsableLocation(Option.getOrElse(decodeSettings(parsed), () => fallback))
+    },
+    deserialize: (raw) => {
+      return withUsableLocation(Option.getOrElse(decodeStoredSettings(raw), () => fallback))
     },
   })
 }

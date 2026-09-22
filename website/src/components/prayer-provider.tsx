@@ -4,7 +4,14 @@ import { useClock } from '@/hooks/use-clock'
 import { useDeviceLocation } from '@/hooks/use-device-location'
 import { useResolvedTheme } from '@/hooks/use-resolved-theme'
 import { useStoredSettings, useStoredTheme } from '@/hooks/use-stored-settings'
-import { cityLabel, defaultCityForTimeZone, findCity, nearestCity, type City } from '@/lib/cities'
+import {
+  cityChoiceLabel,
+  cityLabel,
+  defaultCityForTimeZone,
+  nearestCity,
+  resolveLocationLabel,
+  type CityChoice,
+} from '@/lib/cities'
 import type { ClockOptions } from '@/lib/format'
 import { MESSAGES } from '@/lib/i18n'
 import {
@@ -54,6 +61,10 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
   }, [deviceTimeZone, settings.language])
 
   const location = settings.location ?? fallbackLocation
+  const locationLabel = useMemo(
+    () => resolveLocationLabel(location, settings.language),
+    [location, settings.language],
+  )
   const locale = resolveLocale(settings.language)
   const hour12 = useMemo(
     () => resolveHour12(settings.timeFormat, locale),
@@ -81,18 +92,8 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
 
   const update = useCallback(
     (patch: Partial<PrayerSettings>) => {
-      setSettings((current) => {
-        const next = { ...current, ...patch }
-
-        if (patch.language && patch.language !== current.language && next.location?.cityId) {
-          const city = findCity(next.location.cityId)
-          if (city) {
-            next.location = { ...next.location, label: cityLabel(city, patch.language) }
-          }
-        }
-
-        return next
-      })
+      // The label is derived from the stored city parts, so it follows language.
+      setSettings((current) => ({ ...current, ...patch }))
     },
     [setSettings],
   )
@@ -114,17 +115,22 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
   }, [deviceTimeZone, requestPositionEffect, setSettings])
 
   const chooseCity = useCallback(
-    (city: City) => {
+    (choice: CityChoice) => {
       setSettings((current) => ({
         ...current,
         location: {
           source: 'city',
-          label: cityLabel(city, current.language),
-          latitude: city.latitude,
-          longitude: city.longitude,
-          timeZone: city.timeZone,
+          label: cityChoiceLabel(choice, current.language),
+          latitude: choice.latitude,
+          longitude: choice.longitude,
+          timeZone: choice.timeZone,
           approximate: false,
-          cityId: city.id,
+          // Optional keys are omitted rather than set to undefined: the schema
+          // treats a present key as a value it must be able to encode.
+          ...(choice.cityId ? { cityId: choice.cityId } : {}),
+          cityName: choice.cityName,
+          ...(choice.countryCode ? { countryCode: choice.countryCode } : {}),
+          ...(choice.countryName ? { countryName: choice.countryName } : {}),
         },
       }))
     },
@@ -134,7 +140,7 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
   const applyCoordinates = useCallback(
     (latitude: number, longitude: number) => {
       setSettings((current) => {
-        const city = nearestCity(latitude, longitude)
+        const nearest = nearestCity(latitude, longitude)
 
         return {
           ...current,
@@ -144,8 +150,8 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
             latitude,
             longitude,
             // A nearby city supplies the right clock for the coordinates.
-            timeZone: city?.timeZone ?? deviceTimeZone,
-            approximate: !city,
+            timeZone: nearest?.timeZone ?? deviceTimeZone,
+            approximate: !nearest,
           },
         }
       })
@@ -163,6 +169,7 @@ function PrayerScheduleProvider({ children }: { children: ReactNode }) {
       theme,
       resolvedTheme,
       location,
+      locationLabel,
       locationStatus,
       locale,
       hour12,

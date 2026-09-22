@@ -105,6 +105,10 @@ export type Messages = {
   locationUnsupported: string
   searchCity: string
   searchCityPlaceholder: string
+  searchCityHint: string
+  popularCities: string
+  loadingCities: string
+  showingMatches: string
   noCityResults: string
   manualCoordinates: string
   manualCoordinatesHint: string
@@ -184,8 +188,12 @@ export const MESSAGES: Record<LanguageId, Messages> = {
     locationUnavailable: 'Your location is unavailable right now. Pick a city instead.',
     locationUnsupported: 'This browser cannot share a location. Pick a city instead.',
     searchCity: 'City',
-    searchCityPlaceholder: 'Search for a city',
-    noCityResults: 'No city matches that search.',
+    searchCityPlaceholder: 'Search any city in the world',
+    searchCityHint: 'Any city, in any country.',
+    popularCities: 'Popular cities',
+    loadingCities: 'Loading cities',
+    showingMatches: 'Showing {shown} of {total} matches',
+    noCityResults: 'No city matches that search. Enter its coordinates below instead.',
     manualCoordinates: 'Manual coordinates',
     manualCoordinatesHint: 'Decimal degrees, for example 52.52 and 13.405.',
     latitude: 'Latitude',
@@ -264,8 +272,12 @@ export const MESSAGES: Record<LanguageId, Messages> = {
     locationUnavailable: 'Lokasi tidak tersedia saat ini. Pilih kota saja.',
     locationUnsupported: 'Peramban ini tidak bisa membagikan lokasi. Pilih kota saja.',
     searchCity: 'Kota',
-    searchCityPlaceholder: 'Cari kota',
-    noCityResults: 'Tidak ada kota yang cocok.',
+    searchCityPlaceholder: 'Cari kota mana pun di dunia',
+    searchCityHint: 'Kota apa pun, di negara mana pun.',
+    popularCities: 'Kota populer',
+    loadingCities: 'Memuat kota',
+    showingMatches: 'Menampilkan {shown} dari {total} hasil',
+    noCityResults: 'Tidak ada kota yang cocok. Masukkan koordinatnya di bawah.',
     manualCoordinates: 'Koordinat manual',
     manualCoordinatesHint: 'Derajat desimal, misalnya 52,52 dan 13,405.',
     latitude: 'Lintang',
@@ -286,4 +298,14 @@ export const MESSAGES: Record<LanguageId, Messages> = {
     footerNote: 'Dibuat oleh Nakafa. Waktu sholat dihitung dengan adhan.',
     sourceCta: 'Lihat kode sumber',
   },
+}
+
+/** Fills `{name}` placeholders in a message. */
+export function formatMessage(
+  template: string,
+  values: Readonly<Record<string, string | number>>,
+): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) =>
+    key in values ? String(values[key]) : match,
+  )
 }

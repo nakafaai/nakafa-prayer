@@ -1,11 +1,12 @@
 import { useDisclosure } from '@mantine/hooks'
 import { TriangleAlert } from 'lucide-react'
+import { AppErrorBoundary } from './components/app-error-boundary'
 import { LocationPanel } from './components/location-panel'
 import { NextPrayerHero } from './components/next-prayer-hero'
 import { PrayerList } from './components/prayer-list'
 import { usePrayerSchedule } from './components/prayer-context'
 import { PrayerProviders } from './components/prayer-provider'
-import { SettingsDialog } from './components/settings-dialog'
+import { SettingsSheet } from './components/settings-sheet'
 import { SiteFooter } from './components/site-footer'
 import { SiteHeader } from './components/site-header'
 import { Panel } from './components/ui/panel'
@@ -55,7 +56,7 @@ function SiteShell() {
         </main>
 
         <SiteFooter />
-        <SettingsDialog opened={settingsOpened} onClose={settings.close} />
+        <SettingsSheet opened={settingsOpened} onClose={settings.close} />
       </div>
     </TooltipProvider>
   )
@@ -63,8 +64,10 @@ function SiteShell() {
 
 export function App() {
   return (
-    <PrayerProviders>
-      <SiteShell />
-    </PrayerProviders>
+    <AppErrorBoundary>
+      <PrayerProviders>
+        <SiteShell />
+      </PrayerProviders>
+    </AppErrorBoundary>
   )
 }
