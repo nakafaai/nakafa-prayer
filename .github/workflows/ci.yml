@@ -14,6 +14,36 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  website:
+    name: Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+
+      - name: Enable pnpm
+        run: corepack enable
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+
+      - name: Install
+        working-directory: website
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Type check, lint and build
+        working-directory: website
+        run: pnpm run verify
+
+      # The gate fails unless React Doctor reports 100 with no findings.
+      - name: React Doctor
+        working-directory: website
+        run: pnpm run doctor
+
   build:
     name: Build and Test
     runs-on: macos-15

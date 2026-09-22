@@ -1,3 +1,5 @@
+minimumReleaseAge: 2880
+trustPolicy: no-downgrade
 minimumReleaseAgeExclude:
   - '@mantine/hooks@9.6.2'
   - effect@4.0.0-rc.117

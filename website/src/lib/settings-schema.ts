@@ -29,6 +29,10 @@ export const SiteLocationSchema = Schema.Struct({
   approximate: Schema.Boolean,
   /** Set when the location came from the city picker, so labels follow language. */
   cityId: Schema.optionalKey(Schema.String),
+  /** City parts, stored so the label can be rebuilt in either language. */
+  cityName: Schema.optionalKey(Schema.String),
+  countryCode: Schema.optionalKey(Schema.String),
+  countryName: Schema.optionalKey(Schema.String),
 })
 
 export const PrayerSettingsSchema = Schema.Struct({
@@ -48,3 +52,26 @@ export type LanguagePreference = typeof LanguageSchema.Type
 export const decodeSettings = Schema.decodeUnknownOption(PrayerSettingsSchema)
 export const encodeSettings = Schema.encodeSync(PrayerSettingsSchema)
 export const decodeTheme = Schema.decodeUnknownOption(ThemeSchema)
+
+/**
+ * Stored settings decoded straight from their JSON text.
+ *
+ * `localStorage` hands back a string, so parsing and validating are one step:
+ * absent or malformed text, or a record that no longer matches the schema,
+ * yields `None` and the caller falls back to the defaults.
+ */
+export const decodeStoredSettings = Schema.decodeUnknownOption(
+  Schema.fromJsonString(PrayerSettingsSchema),
+)
+
+/**
+ * Literal decoders for the controlled inputs.
+ *
+ * Radix reports a bare `string` for a select or a segmented control, so the
+ * value passes through the same schema that owns the setting instead of an
+ * assertion that would let anything off-menu into state.
+ */
+export const decodeCalculationMethod = Schema.decodeUnknownOption(CalculationMethodSchema)
+export const decodeMadhab = Schema.decodeUnknownOption(MadhabSchema)
+export const decodeLanguage = Schema.decodeUnknownOption(LanguageSchema)
+export const decodeTimeFormat = Schema.decodeUnknownOption(TimeFormatSchema)

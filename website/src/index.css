@@ -225,27 +225,63 @@
   transition: transform 1s linear;
 }
 
-@keyframes dialog-in {
+@keyframes sheet-in-bottom {
   from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
+    transform: translateY(100%);
   }
 
   to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes dialog-out {
+@keyframes sheet-out-bottom {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes sheet-in-end {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sheet-out-end {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-fade-out {
   from {
     opacity: 1;
-    transform: translateY(0) scale(1);
   }
 
   to {
     opacity: 0;
-    transform: translateY(6px) scale(0.99);
   }
 }
 
@@ -281,22 +317,35 @@
   }
 }
 
-/* Occasional surfaces: modals, menus and tooltips. */
-.dialog-overlay[data-state='open'] {
-  animation: overlay-in 180ms ease;
+/* Occasional surfaces: sheets, menus and tooltips. */
+.sheet-overlay[data-state='open'] {
+  animation: overlay-in 200ms ease;
 }
 
-.dialog-overlay[data-state='closed'] {
-  animation: overlay-out 140ms ease;
+.sheet-overlay[data-state='closed'] {
+  animation: overlay-out 160ms ease;
 }
 
-/* A modal is not anchored to a trigger, so it scales from its own centre. */
-.dialog-content[data-state='open'] {
-  animation: dialog-in 220ms var(--ease-out-strong);
+/*
+ * A sheet enters from the edge it belongs to and leaves the same way. The iOS
+ * drawer curve keeps the travel smooth without feeling slow.
+ */
+.sheet-content[data-state='open'] {
+  animation: sheet-in-bottom 320ms var(--ease-drawer);
 }
 
-.dialog-content[data-state='closed'] {
-  animation: dialog-out 160ms var(--ease-out-strong);
+.sheet-content[data-state='closed'] {
+  animation: sheet-out-bottom 240ms var(--ease-drawer);
+}
+
+@media (min-width: 640px) {
+  .sheet-content[data-state='open'] {
+    animation-name: sheet-in-end;
+  }
+
+  .sheet-content[data-state='closed'] {
+    animation-name: sheet-out-end;
+  }
 }
 
 /* Menus and tooltips scale from the trigger they belong to. */
@@ -320,8 +369,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dialog-overlay[data-state],
-  .dialog-content[data-state],
+  /* A sheet keeps the surface change and drops the travel. */
+  .sheet-content[data-state='open'] {
+    animation: sheet-fade 160ms ease;
+  }
+
+  .sheet-content[data-state='closed'] {
+    animation: sheet-fade-out 120ms ease;
+  }
+
   .select-content[data-state] {
     animation: none;
   }

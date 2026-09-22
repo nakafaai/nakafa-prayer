@@ -35,7 +35,10 @@ export function DayClock() {
 
   const { timeZone } = state.location
   const today = state.week[0]
-  const markers = (today?.prayers ?? []).map((prayer) => dayFraction(prayer.instant, timeZone))
+  const markers = (today?.prayers ?? []).map((prayer) => ({
+    id: prayer.id,
+    fraction: dayFraction(prayer.instant, timeZone),
+  }))
   const nextIndex =
     today && window
       ? today.prayers.findIndex((prayer) => prayer.instant.getTime() === window.next.instant.getTime())

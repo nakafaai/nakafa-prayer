@@ -1,6 +1,6 @@
 import { createContext, use } from 'react'
 import type { LocationStatus } from '@/hooks/use-device-location'
-import type { City } from '@/lib/cities'
+import type { CityChoice } from '@/lib/cities'
 import type { ClockOptions } from '@/lib/format'
 import type { CivilDate, DaySchedule, PrayerWindow } from '@/lib/prayer'
 import type { PrayerSettings, SiteLocation, ThemePreference } from '@/lib/settings-schema'
@@ -10,6 +10,8 @@ export type PrayerScheduleState = {
   theme: ThemePreference
   resolvedTheme: 'light' | 'dark'
   location: SiteLocation
+  /** Location name in the active language, derived from the stored city parts. */
+  locationLabel: string
   locationStatus: LocationStatus
   locale: string
   hour12: boolean
@@ -27,7 +29,7 @@ export type PrayerScheduleActions = {
   update: (patch: Partial<PrayerSettings>) => void
   setTheme: (theme: ThemePreference) => void
   requestDeviceLocation: () => void
-  chooseCity: (city: City) => void
+  chooseCity: (choice: CityChoice) => void
   applyCoordinates: (latitude: number, longitude: number) => void
 }
 

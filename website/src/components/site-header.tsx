@@ -34,7 +34,7 @@ export function SiteHeader({
             className="hidden max-w-56 text-muted-foreground sm:inline-flex"
           >
             <MapPin aria-hidden="true" />
-            <span className="min-w-0 truncate">{state.location.label}</span>
+            <span className="min-w-0 truncate">{state.locationLabel}</span>
           </Button>
 
           <Tooltip>

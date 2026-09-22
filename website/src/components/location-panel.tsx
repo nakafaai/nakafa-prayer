@@ -67,7 +67,7 @@ export function LocationPanel({ onChangeLocation }: { onChangeLocation: () => vo
       </PanelHeader>
 
       <dl className="grid gap-x-6 gap-y-5 p-4 sm:grid-cols-2 sm:p-5">
-        <Detail label={t.location} value={state.location.label} />
+        <Detail label={t.location} value={state.locationLabel} />
         <Detail
           label={t.timeZone}
           value={`${state.location.timeZone} (UTC${sign}${offsetHours}:${offsetRemainder})`}
