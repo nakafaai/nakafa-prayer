@@ -1,5 +1,8 @@
 version: 1
 project: nakafa-prayer-website
+# The macOS app lives at the repository root; the hosted web app is the
+# `website` workspace, so the build runs against that directory.
+applicationRoot: website
 build:
   install: pnpm install --frozen-lockfile --ignore-scripts
   command: pnpm run build
