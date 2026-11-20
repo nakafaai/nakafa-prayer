@@ -4,17 +4,16 @@
  *
  * The CLI can gate on findings by itself, but the project's bar is the score,
  * so this reads the structured report and checks both. It runs the published
- * CLI through `npx` rather than depending on it: its own dependency tree trips
- * the `trustPolicy: no-downgrade` rule this project keeps enabled, and a linter
- * is not worth weakening that policy for.
+ * CLI through `bunx` rather than depending on it, so the linter's own
+ * dependency tree stays out of the site's lockfile.
  */
 import { spawnSync } from 'node:child_process'
 
 const REACT_DOCTOR_VERSION = 'react-doctor@0.9.14'
 
 const result = spawnSync(
-  'npx',
-  ['--yes', REACT_DOCTOR_VERSION, '.', '--yes', '--json'],
+  'bunx',
+  [REACT_DOCTOR_VERSION, '.', '--yes', '--json'],
   { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] },
 )
 

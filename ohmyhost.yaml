@@ -4,8 +4,8 @@ project: nakafa-prayer-website
 # `website` workspace, so the build runs against that directory.
 applicationRoot: website
 build:
-  install: pnpm install --frozen-lockfile --ignore-scripts
-  command: pnpm run build
+  install: bun install --frozen-lockfile --ignore-scripts
+  command: bun run build
   output: dist
 runtime:
   mode: static
