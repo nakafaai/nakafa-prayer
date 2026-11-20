@@ -26,23 +26,23 @@ jobs:
         with:
           node-version: 22
 
-      - name: Enable pnpm
-        run: corepack enable
-        env:
-          COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
 
       - name: Install
         working-directory: website
-        run: pnpm install --frozen-lockfile --ignore-scripts
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Type check, lint and build
         working-directory: website
-        run: pnpm run verify
+        run: bun run verify
 
       # The gate fails unless React Doctor reports 100 with no findings.
       - name: React Doctor
         working-directory: website
-        run: pnpm run doctor
+        run: bun run doctor
 
   build:
     name: Build and Test

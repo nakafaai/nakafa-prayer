@@ -32,21 +32,21 @@ page has no server data to cache.
 ## Development
 
 ```bash
-pnpm install
-pnpm run dev
+bun install
+bun run dev
 ```
 
 ## Checks
 
 ```bash
-pnpm run verify
+bun run verify
 ```
 
-`pnpm run build` stays a direct `vite build`, because the hosting runtime runs it
+`bun run build` stays a direct `vite build`, because the hosting runtime runs it
 as the framework build command. `verify` adds the type check and the linter.
 
-pnpm is the pinned package manager, so commit `pnpm-lock.yaml` and do not add a
-second lockfile.
+Bun is the pinned package manager, so commit `bun.lock` and do not add a second
+lockfile.
 
 ## Layout
 

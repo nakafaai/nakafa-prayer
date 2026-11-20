@@ -29,8 +29,8 @@ Vite, React 19, Tailwind CSS v4, Radix primitives, Mantine hooks and Effect.
   or animates from `scale(0)`. Every moving element needs a
   `prefers-reduced-motion` path, and hover motion stays behind
   `@media (hover: hover) and (pointer: fine)`.
-- `pnpm run build` must stay a direct `vite build`, because the hosting runtime
-  runs it as the framework build command. Use `pnpm run verify` for the type
+- `bun run build` must stay a direct `vite build`, because the hosting runtime
+  runs it as the framework build command. Use `bun run verify` for the type
   check, the linter and the build together.
 
 ## Privacy boundary

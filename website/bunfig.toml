@@ -1,0 +1,5 @@
+[install]
+# A release must be two days old before it installs.
+minimumReleaseAge = 172800
+# Exact versions exempt from the release age gate.
+minimumReleaseAgeExcludes = ["@mantine/hooks@9.6.2", "effect@4.0.0-rc.117"]
