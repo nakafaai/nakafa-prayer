@@ -4,7 +4,6 @@
 .agents/
 skills-lock.json
 # Local agent tooling state, never source.
-.ohmyhost/
 .playwright-cli/
 DerivedData/
 *.xcuserdata/
