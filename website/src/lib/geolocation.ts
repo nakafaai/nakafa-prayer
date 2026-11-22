@@ -1,23 +1,43 @@
-import { Data, Effect } from 'effect'
+import { Effect, Schema } from 'effect'
 
-export type DeviceCoordinates = { latitude: number; longitude: number }
+export const DeviceCoordinatesSchema = Schema.Struct({
+  latitude: Schema.Finite,
+  longitude: Schema.Finite,
+})
+
+export type DeviceCoordinates = typeof DeviceCoordinatesSchema.Type
 
 /** The visitor refused the permission prompt. */
-export class LocationDenied extends Data.TaggedError('LocationDenied')<{
-  readonly reason: 'permission-denied'
-}> {}
+export class LocationDenied extends Schema.TaggedError<
+  LocationDenied,
+  { readonly brand: unique symbol }
+>()('LocationDenied', {
+  reason: Schema.Literal('permission-denied'),
+}) {}
 
 /** The browser could not produce a position this time. */
-export class LocationUnavailable extends Data.TaggedError('LocationUnavailable')<{
-  readonly reason: 'position-unavailable'
-}> {}
+export class LocationUnavailable extends Schema.TaggedError<
+  LocationUnavailable,
+  { readonly brand: unique symbol }
+>()('LocationUnavailable', {
+  reason: Schema.Literal('position-unavailable'),
+}) {}
 
 /** The browser has no Geolocation API at all. */
-export class LocationUnsupported extends Data.TaggedError('LocationUnsupported')<{
-  readonly reason: 'no-geolocation-api'
-}> {}
+export class LocationUnsupported extends Schema.TaggedError<
+  LocationUnsupported,
+  { readonly brand: unique symbol }
+>()('LocationUnsupported', {
+  reason: Schema.Literal('no-geolocation-api'),
+}) {}
 
-export type LocationError = LocationDenied | LocationUnavailable | LocationUnsupported
+export const LocationErrorSchema = Schema.Union([
+  LocationDenied,
+  LocationUnavailable,
+  LocationUnsupported,
+])
+
+export type LocationError = typeof LocationErrorSchema.Type
 
 /**
  * Requests one position from the browser.
@@ -25,8 +45,8 @@ export type LocationError = LocationDenied | LocationUnavailable | LocationUnsup
  * The failure is a typed value, not an exception, so the page can tell the
  * visitor what to do next instead of quietly keeping stale coordinates.
  */
-export function requestPosition(): Effect.Effect<DeviceCoordinates, LocationError> {
-  return Effect.suspend(() => {
+export const requestPosition: Effect.Effect<DeviceCoordinates, LocationError> = Effect.suspend(
+  () => {
     if (typeof navigator === 'undefined' || !('geolocation' in navigator)) {
       return Effect.fail(new LocationUnsupported({ reason: 'no-geolocation-api' }))
     }
@@ -52,5 +72,5 @@ export function requestPosition(): Effect.Effect<DeviceCoordinates, LocationErro
         longitude: position.coords.longitude,
       }
     })
-  })
-}
+  },
+)

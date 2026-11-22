@@ -1,3 +1,4 @@
+import { DateTime } from 'effect'
 import { utcOffsetMinutes } from '@/lib/cities'
 import { formatBearing, formatCoordinates } from '@/lib/format'
 import { MADHAB_NAMES, MESSAGES, METHOD_NAMES } from '@/lib/i18n'
@@ -52,7 +53,10 @@ export function LocationPanel({ onChangeLocation }: { onChangeLocation: () => vo
   const t = MESSAGES[state.settings.language]
   const { language } = state.settings
 
-  const offsetMinutes = utcOffsetMinutes(state.location.timeZone, new Date())
+  const offsetMinutes = utcOffsetMinutes(
+    state.location.timeZone,
+    DateTime.toDateUtc(DateTime.nowUnsafe()),
+  )
   const sign = offsetMinutes < 0 ? '-' : '+'
   const offsetHours = String(Math.floor(Math.abs(offsetMinutes) / 60)).padStart(2, '0')
   const offsetRemainder = String(Math.abs(offsetMinutes) % 60).padStart(2, '0')

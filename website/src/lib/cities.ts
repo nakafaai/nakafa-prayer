@@ -1,4 +1,6 @@
+import { Array as Arr, DateTime, Option, Schema } from 'effect'
 import type { LanguageId } from './i18n'
+import { zonedParts } from './prayer'
 import type { SiteLocation } from './settings-schema'
 import { loadedWorldCities, normalizeForSearch, worldCityChoice } from './world-cities'
 
@@ -149,7 +151,9 @@ export const POPULAR_CITIES: City[] = [
 ]
 
 export function findCity(id: string | undefined): City | undefined {
-  return id ? POPULAR_CITIES.find((city) => city.id === id) : undefined
+  return id
+    ? Option.getOrUndefined(Arr.findFirst(POPULAR_CITIES, (city) => city.id === id))
+    : undefined
 }
 
 /**
@@ -160,15 +164,15 @@ export function findCity(id: string | undefined): City | undefined {
  * precise location.
  */
 export function defaultCityForTimeZone(timeZone: string): City {
-  const exact = POPULAR_CITIES.find((city) => city.timeZone === timeZone)
-  if (exact) {
-    return exact
+  const exact = Arr.findFirst(POPULAR_CITIES, (city) => city.timeZone === timeZone)
+  if (Option.isSome(exact)) {
+    return exact.value
   }
 
-  const now = new Date()
+  const now = DateTime.toDateUtc(DateTime.nowUnsafe())
   const offset = utcOffsetMinutes(timeZone, now)
-  const sameOffset = POPULAR_CITIES.find(
-    (city) => utcOffsetMinutes(city.timeZone, now) === offset,
+  const sameOffset = Option.getOrUndefined(
+    Arr.findFirst(POPULAR_CITIES, (city) => utcOffsetMinutes(city.timeZone, now) === offset),
   )
 
   return sameOffset ?? findCity(FALLBACK_CITY_ID) ?? POPULAR_CITIES[0]
@@ -176,26 +180,14 @@ export function defaultCityForTimeZone(timeZone: string): City {
 
 /** Offset from UTC in minutes for a time zone at a given instant. */
 export function utcOffsetMinutes(timeZone: string, instant: Date): number {
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    hourCycle: 'h23',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-  const parts = formatter.formatToParts(instant)
-  const read = (type: Intl.DateTimeFormatPartTypes) =>
-    Number(parts.find((part) => part.type === type)?.value ?? '0')
+  const parts = zonedParts(instant, timeZone)
   const asUtc = Date.UTC(
-    read('year'),
-    read('month') - 1,
-    read('day'),
-    read('hour'),
-    read('minute'),
-    read('second'),
+    parts.year,
+    parts.month - 1,
+    parts.day,
+    parts.hour,
+    parts.minute,
+    parts.second,
   )
 
   return Math.round((asUtc - instant.getTime()) / 60000)
@@ -212,8 +204,9 @@ export function nearestCity(
   maxDistanceKm = 500,
 ): CityChoice | undefined {
   const world = loadedWorldCities()
-  const pool: CityChoice[] =
-    world?.map(worldCityChoice) ?? POPULAR_CITIES.map(popularCityChoice)
+  const pool: CityChoice[] = world
+    ? Arr.map(world, worldCityChoice)
+    : Arr.map(POPULAR_CITIES, popularCityChoice)
   let nearest: CityChoice | undefined
   let nearestDistance = Number.POSITIVE_INFINITY
 
@@ -265,8 +258,8 @@ export function resolveLocationLabel(location: SiteLocation, language: LanguageI
   return cityChoiceLabel(
     {
       cityName: location.cityName,
-      countryCode: location.countryCode,
-      countryName: location.countryName,
+      ...(location.countryCode ? { countryCode: location.countryCode } : {}),
+      ...(location.countryName ? { countryName: location.countryName } : {}),
       latitude: location.latitude,
       longitude: location.longitude,
       timeZone: location.timeZone,
@@ -276,16 +269,18 @@ export function resolveLocationLabel(location: SiteLocation, language: LanguageI
 }
 
 /** A chosen place, from the curated list, the world dataset or coordinates. */
-export type CityChoice = {
-  cityId?: string
-  cityName: string
-  province?: string
-  countryCode?: string
-  countryName?: string
-  latitude: number
-  longitude: number
-  timeZone: string
-}
+export const CityChoiceSchema = Schema.Struct({
+  cityId: Schema.optionalKey(Schema.String),
+  cityName: Schema.String,
+  province: Schema.optionalKey(Schema.String),
+  countryCode: Schema.optionalKey(Schema.String),
+  countryName: Schema.optionalKey(Schema.String),
+  latitude: Schema.Finite,
+  longitude: Schema.Finite,
+  timeZone: Schema.String,
+})
+
+export type CityChoice = typeof CityChoiceSchema.Type
 
 export function popularCityChoice(city: City): CityChoice {
   return {
@@ -336,7 +331,8 @@ export function expandCityQuery(query: string): string[] {
     return []
   }
 
-  const targets = CITY_SEARCH_ALIASES.filter(([alias]) => alias.startsWith(needle)).map(
+  const targets = Arr.map(
+    Arr.filter(CITY_SEARCH_ALIASES, ([alias]) => alias.startsWith(needle)),
     ([, target]) => target,
   )
 

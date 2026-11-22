@@ -1,5 +1,10 @@
 import { useInterval, useWindowEvent } from '@mantine/hooks'
+import { DateTime } from 'effect'
 import { useState } from 'react'
+
+function currentInstant(): Date {
+  return DateTime.toDateUtc(DateTime.nowUnsafe())
+}
 
 /**
  * Clock that ticks while the page is visible.
@@ -8,15 +13,15 @@ import { useState } from 'react'
  * comes back, so a countdown is never shown stale.
  */
 export function useClock(intervalMs = 1000): Date {
-  const [now, setNow] = useState(() => new Date())
+  const [now, setNow] = useState(currentInstant)
 
   // A hidden tab is throttled by the browser, so the timer may skip. Resyncing
   // the moment the page is visible again is what keeps the countdown honest.
   useWindowEvent('visibilitychange', () => {
-    setNow(new Date())
+    setNow(currentInstant())
   })
 
-  useInterval(() => setNow(new Date()), intervalMs, { autoInvoke: true })
+  useInterval(() => setNow(currentInstant()), intervalMs, { autoInvoke: true })
 
   return now
 }

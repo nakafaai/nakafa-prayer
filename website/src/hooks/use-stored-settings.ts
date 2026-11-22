@@ -1,11 +1,17 @@
 import { useLocalStorage } from '@mantine/hooks'
 import { Option } from 'effect'
 import { useMemo } from 'react'
-import { SETTINGS_STORAGE_KEY, THEME_STORAGE_KEY, createDefaultSettings, withUsableLocation } from '@/lib/settings'
+import {
+  SETTINGS_STORAGE_KEY,
+  THEME_STORAGE_KEY,
+  createDefaultSettings,
+  withUsableLocation,
+} from '@/lib/settings'
 import {
   decodeStoredSettings,
   decodeTheme,
-  encodeSettings,
+  encodeStoredSettings,
+  encodeStoredSettingsSync,
   type PrayerSettings,
   type ThemePreference,
 } from '@/lib/settings-schema'
@@ -23,18 +29,13 @@ export function useStoredSettings() {
     key: SETTINGS_STORAGE_KEY,
     defaultValue: fallback,
     getInitialValueInEffect: false,
-    serialize: (value) => {
-      try {
-        return JSON.stringify(encodeSettings(value))
-      } catch {
-        // Storage must never be able to blank the page: keep whatever is
-        // already stored instead of throwing during render.
-        return localStorage.getItem(SETTINGS_STORAGE_KEY) ?? JSON.stringify(encodeSettings(fallback))
-      }
-    },
-    deserialize: (raw) => {
-      return withUsableLocation(Option.getOrElse(decodeStoredSettings(raw), () => fallback))
-    },
+    serialize: (value) =>
+      Option.getOrElse(
+        encodeStoredSettings(value),
+        () => localStorage.getItem(SETTINGS_STORAGE_KEY) ?? encodeStoredSettingsSync(fallback),
+      ),
+    deserialize: (raw) =>
+      withUsableLocation(Option.getOrElse(decodeStoredSettings(raw), () => fallback)),
   })
 }
 

@@ -1,3 +1,4 @@
+import { Array as Arr, DateTime, Match, Option } from 'effect'
 import type { LanguageId } from './i18n'
 import type { PrayerSettings } from './settings-schema'
 
@@ -11,28 +12,30 @@ export function resolveLocale(language: LanguageId): string {
 
 /** Reads the visitor's preferred language, defaulting to English. */
 export function detectLanguage(): LanguageId {
-  const preferred = typeof navigator === 'undefined' ? [] : navigator.languages ?? []
+  const preferred = typeof navigator === 'undefined' ? [] : (navigator.languages ?? [])
 
-  for (const candidate of preferred) {
-    if (candidate.toLowerCase().startsWith('id')) {
-      return 'id'
-    }
-  }
+  return Option.match(
+    Arr.findFirst(preferred, (candidate) => candidate.toLowerCase().startsWith('id')),
+    {
+      onNone: () => 'en' as const,
+      onSome: () => 'id' as const,
+    },
+  )
+}
 
-  return 'en'
+const LOCALE_HOUR_12: Readonly<Record<string, boolean>> = {
+  'en-US': new Intl.DateTimeFormat('en-US', { hour: 'numeric' }).resolvedOptions().hour12 ?? false,
+  'id-ID': new Intl.DateTimeFormat('id-ID', { hour: 'numeric' }).resolvedOptions().hour12 ?? false,
 }
 
 /** Resolves the 12/24-hour preference, following the locale when unset. */
 export function resolveHour12(timeFormat: PrayerSettings['timeFormat'], locale: string): boolean {
-  if (timeFormat === 'h12') {
-    return true
-  }
-
-  if (timeFormat === 'h24') {
-    return false
-  }
-
-  return new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12 ?? false
+  return Match.value(timeFormat).pipe(
+    Match.when('h12', () => true),
+    Match.when('h24', () => false),
+    Match.when('system', () => LOCALE_HOUR_12[locale] ?? false),
+    Match.exhaustive,
+  )
 }
 
 export function createDefaultSettings(): PrayerSettings {
@@ -47,12 +50,7 @@ export function createDefaultSettings(): PrayerSettings {
 
 /** True when `Intl` accepts the identifier, so a stored zone cannot break formatting. */
 export function isValidTimeZone(timeZone: string): boolean {
-  try {
-    new Intl.DateTimeFormat('en-US', { timeZone })
-    return true
-  } catch {
-    return false
-  }
+  return Option.isSome(DateTime.zoneMakeNamed(timeZone))
 }
 
 /** Drops a stored location whose time zone the runtime no longer supports. */

@@ -1,8 +1,16 @@
-import { Effect } from 'effect'
+import { Effect, Schema } from 'effect'
 import { useCallback, useState } from 'react'
 import { requestPosition, type DeviceCoordinates } from '@/lib/geolocation'
 
-export type LocationStatus = 'idle' | 'requesting' | 'denied' | 'unavailable' | 'unsupported'
+export const LocationStatusSchema = Schema.Literals([
+  'idle',
+  'requesting',
+  'denied',
+  'unavailable',
+  'unsupported',
+])
+
+export type LocationStatus = typeof LocationStatusSchema.Type
 
 /**
  * Runs the geolocation effect and reports the outcome as page state.
@@ -16,16 +24,18 @@ export function useDeviceLocation() {
   const request = useCallback((onSuccess: (coordinates: DeviceCoordinates) => void) => {
     setStatus('requesting')
 
-    const program = requestPosition().pipe(
+    const program = requestPosition.pipe(
       Effect.tap((coordinates) =>
         Effect.sync(() => {
           setStatus('idle')
           onSuccess(coordinates)
         }),
       ),
-      Effect.catchTag('LocationDenied', () => Effect.sync(() => setStatus('denied'))),
-      Effect.catchTag('LocationUnavailable', () => Effect.sync(() => setStatus('unavailable'))),
-      Effect.catchTag('LocationUnsupported', () => Effect.sync(() => setStatus('unsupported'))),
+      Effect.catchTags({
+        LocationDenied: () => Effect.sync(() => setStatus('denied')),
+        LocationUnavailable: () => Effect.sync(() => setStatus('unavailable')),
+        LocationUnsupported: () => Effect.sync(() => setStatus('unsupported')),
+      }),
     )
 
     void Effect.runPromise(program)

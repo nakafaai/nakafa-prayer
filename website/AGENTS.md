@@ -15,9 +15,12 @@ Vite, React 19, Tailwind CSS v4, Radix primitives, Mantine hooks and Effect.
   Only write a hook when it encodes domain knowledge, such as the clock or the
   prayer swap counter.
 - Effect owns boundaries and error channels. Stored settings are decoded with a
-  `Schema`, geolocation fails with a typed `LocationError`, and the whole day
-  plan is one program in `src/lib/prayer-program.ts`. Compose with `Effect.gen`
-  instead of wrapping domain calls in `try`/`catch`.
+  `Schema`, geolocation fails with a typed `Schema.TaggedError`, and the whole
+  day plan is one program in `src/lib/prayer-program.ts`. Compose with
+  `Effect.fn` instead of wrapping domain calls in `try`/`catch`.
+- `tsrs`, patched by `@effect/tsgo` (`effect-tsgo patch --tsrs --no-typescript`),
+  is the only compiler and enforces the Effect language-service rules in
+  `tsconfig.base.json`.
 - The installed Effect source is the reference for its API. Version 4 ships
   readable TypeScript at `node_modules/effect/src`, notes at
   `node_modules/effect/ai-docs`, and its own `AGENTS.md`. Read those before

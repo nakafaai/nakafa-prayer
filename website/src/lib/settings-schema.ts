@@ -20,8 +20,8 @@ export const ThemeSchema = Schema.Literals(THEME_PREFERENCES)
 export const SiteLocationSchema = Schema.Struct({
   source: Schema.Literals(['device', 'city']),
   label: Schema.String,
-  latitude: Schema.Number.pipe(Schema.check(Schema.isBetween({ minimum: -90, maximum: 90 }))),
-  longitude: Schema.Number.pipe(
+  latitude: Schema.Finite.pipe(Schema.check(Schema.isBetween({ minimum: -90, maximum: 90 }))),
+  longitude: Schema.Finite.pipe(
     Schema.check(Schema.isBetween({ minimum: -180, maximum: 180 })),
   ),
   timeZone: Schema.String,
@@ -49,20 +49,22 @@ export type ThemePreference = typeof ThemeSchema.Type
 export type TimeFormat = typeof TimeFormatSchema.Type
 export type LanguagePreference = typeof LanguageSchema.Type
 
+const StoredSettingsJsonSchema = Schema.fromJsonString(PrayerSettingsSchema)
+
 export const decodeSettings = Schema.decodeUnknownOption(PrayerSettingsSchema)
 export const encodeSettings = Schema.encodeSync(PrayerSettingsSchema)
 export const decodeTheme = Schema.decodeUnknownOption(ThemeSchema)
 
 /**
- * Stored settings decoded straight from their JSON text.
+ * Stored settings decoded and encoded straight from their JSON text.
  *
  * `localStorage` hands back a string, so parsing and validating are one step:
  * absent or malformed text, or a record that no longer matches the schema,
  * yields `None` and the caller falls back to the defaults.
  */
-export const decodeStoredSettings = Schema.decodeUnknownOption(
-  Schema.fromJsonString(PrayerSettingsSchema),
-)
+export const decodeStoredSettings = Schema.decodeUnknownOption(StoredSettingsJsonSchema)
+export const encodeStoredSettings = Schema.encodeOption(StoredSettingsJsonSchema)
+export const encodeStoredSettingsSync = Schema.encodeSync(StoredSettingsJsonSchema)
 
 /**
  * Literal decoders for the controlled inputs.

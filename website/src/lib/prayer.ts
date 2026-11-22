@@ -6,11 +6,13 @@ import {
   Qibla,
   type CalculationParameters,
 } from 'adhan'
+import { Array as Arr, DateTime, MutableHashMap, Option, Schema } from 'effect'
 
 /** The five wajib prayers the macOS app schedules, in chronological order. */
 export const PRAYER_IDS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const
 
-export type PrayerId = (typeof PRAYER_IDS)[number]
+export const PrayerIdSchema = Schema.Literals(PRAYER_IDS)
+export type PrayerId = typeof PrayerIdSchema.Type
 
 /** Calculation methods shared with the macOS app, keyed by its stable IDs. */
 export const CALCULATION_METHOD_IDS = [
@@ -28,12 +30,14 @@ export const CALCULATION_METHOD_IDS = [
   'turkey',
 ] as const
 
-export type CalculationMethodId = (typeof CALCULATION_METHOD_IDS)[number]
+export const CalculationMethodIdSchema = Schema.Literals(CALCULATION_METHOD_IDS)
+export type CalculationMethodId = typeof CalculationMethodIdSchema.Type
 
 /** Asr shadow-length schools shared with the macOS app. */
 export const MADHAB_IDS = ['shafi', 'hanafi'] as const
 
-export type MadhabId = (typeof MADHAB_IDS)[number]
+export const MadhabIdSchema = Schema.Literals(MADHAB_IDS)
+export type MadhabId = typeof MadhabIdSchema.Type
 
 const methodFactories: Record<CalculationMethodId, () => CalculationParameters> = {
   muslimWorldLeague: CalculationMethod.MuslimWorldLeague,
@@ -51,19 +55,41 @@ const methodFactories: Record<CalculationMethodId, () => CalculationParameters> 
 }
 
 /** A Gregorian calendar day without a time zone, used as a calculation input. */
-export type CivilDate = { year: number; month: number; day: number }
+export const CivilDateSchema = Schema.Struct({
+  year: Schema.Finite,
+  month: Schema.Finite,
+  day: Schema.Finite,
+})
+export type CivilDate = typeof CivilDateSchema.Type
 
-export type GeoPoint = { latitude: number; longitude: number }
+export const GeoPointSchema = Schema.Struct({
+  latitude: Schema.Finite,
+  longitude: Schema.Finite,
+})
+export type GeoPoint = typeof GeoPointSchema.Type
 
-export type PrayerInstant = { id: PrayerId; instant: Date }
+export const PrayerInstantSchema = Schema.Struct({
+  id: PrayerIdSchema,
+  instant: Schema.Date,
+})
+export type PrayerInstant = { readonly id: PrayerId; readonly instant: Date }
 
-export type DaySchedule = { date: CivilDate; prayers: PrayerInstant[] }
+export const DayScheduleSchema = Schema.Struct({
+  date: CivilDateSchema,
+  prayers: Schema.Array(PrayerInstantSchema),
+})
+export type DaySchedule = { readonly date: CivilDate; readonly prayers: readonly PrayerInstant[] }
 
 /** A prayer interval with the elapsed fraction between its two ends. */
+export const PrayerWindowSchema = Schema.Struct({
+  previous: PrayerInstantSchema,
+  next: PrayerInstantSchema,
+  progress: Schema.Finite,
+})
 export type PrayerWindow = {
-  previous: PrayerInstant
-  next: PrayerInstant
-  progress: number
+  readonly previous: PrayerInstant
+  readonly next: PrayerInstant
+  readonly progress: number
 }
 
 /** Builds adhan parameters for one calculation method and Asr school. */
@@ -74,6 +100,19 @@ export function calculationParameters(
   const parameters = methodFactories[method]()
   parameters.madhab = madhab === 'hanafi' ? Madhab.Hanafi : Madhab.Shafi
   return parameters
+}
+
+function localCivilDate(date: CivilDate): Date {
+  return DateTime.toDateUtc(
+    DateTime.makeZonedUnsafe(
+      { year: date.year, month: date.month, day: date.day },
+      { adjustForTimeZone: true, timeZone: DateTime.zoneMakeLocal() },
+    ),
+  )
+}
+
+function utcCivilDateTime(date: CivilDate): DateTime.Utc {
+  return DateTime.makeUnsafe({ year: date.year, month: date.month, day: date.day })
 }
 
 /**
@@ -91,11 +130,11 @@ export function daySchedule(
 ): DaySchedule {
   const times = new PrayerTimes(
     new Coordinates(point.latitude, point.longitude),
-    new Date(date.year, date.month - 1, date.day),
+    localCivilDate(date),
     parameters,
   )
 
-  const prayers = PRAYER_IDS.flatMap((id) => {
+  const prayers = Arr.flatMap(PRAYER_IDS, (id) => {
     const instant = times.timeForPrayer(id)
     return instant ? [{ id, instant }] : []
   })
@@ -110,7 +149,7 @@ export function buildSchedules(
   point: GeoPoint,
   parameters: CalculationParameters,
 ): DaySchedule[] {
-  return Array.from({ length: count }, (_, index) =>
+  return Arr.makeBy(count, (index) =>
     daySchedule(addCivilDays(start, index), point, parameters),
   )
 }
@@ -121,9 +160,15 @@ export function buildSchedules(
  * `schedules` must include the day before the visible range so an early-morning
  * visit still has a previous prayer to measure progress from.
  */
-export function resolvePrayerWindow(schedules: DaySchedule[], now: Date): PrayerWindow | null {
-  const timeline = schedules.flatMap((schedule) => schedule.prayers)
-  const nextIndex = timeline.findIndex((prayer) => prayer.instant.getTime() > now.getTime())
+export function resolvePrayerWindow(
+  schedules: readonly DaySchedule[],
+  now: Date,
+): PrayerWindow | null {
+  const timeline = Arr.flatMap(schedules, (schedule) => schedule.prayers)
+  const nextIndex = Option.getOrElse(
+    Arr.findFirstIndex(timeline, (prayer) => prayer.instant.getTime() > now.getTime()),
+    () => -1,
+  )
 
   if (nextIndex < 1) {
     return null
@@ -131,6 +176,10 @@ export function resolvePrayerWindow(schedules: DaySchedule[], now: Date): Prayer
 
   const previous = timeline[nextIndex - 1]
   const next = timeline[nextIndex]
+  if (!(previous && next)) {
+    return null
+  }
+
   const span = next.instant.getTime() - previous.instant.getTime()
   const elapsed = now.getTime() - previous.instant.getTime()
   const progress = span > 0 ? Math.min(Math.max(elapsed / span, 0), 1) : 0
@@ -144,11 +193,11 @@ export function qiblaDirection(point: GeoPoint): number {
 }
 
 export function addCivilDays(date: CivilDate, days: number): CivilDate {
-  const shifted = new Date(Date.UTC(date.year, date.month - 1, date.day + days))
+  const parts = DateTime.toPartsUtc(DateTime.add(utcCivilDateTime(date), { days }))
   return {
-    year: shifted.getUTCFullYear(),
-    month: shifted.getUTCMonth() + 1,
-    day: shifted.getUTCDate(),
+    year: parts.year,
+    month: parts.month,
+    day: parts.day,
   }
 }
 
@@ -163,24 +212,25 @@ export function compareCivilDates(a: CivilDate, b: CivilDate): number {
 
 /** Day of week for a calendar day, 0 = Sunday. */
 export function civilWeekday(date: CivilDate): number {
-  return new Date(Date.UTC(date.year, date.month - 1, date.day)).getUTCDay()
+  return DateTime.toPartsUtc(utcCivilDateTime(date)).weekDay
 }
 
-export type ZonedParts = {
-  year: number
-  month: number
-  day: number
-  hour: number
-  minute: number
-  second: number
-}
+export const ZonedPartsSchema = Schema.Struct({
+  year: Schema.Finite,
+  month: Schema.Finite,
+  day: Schema.Finite,
+  hour: Schema.Finite,
+  minute: Schema.Finite,
+  second: Schema.Finite,
+})
+export type ZonedParts = typeof ZonedPartsSchema.Type
 
-const zonedPartFormatters = new Map<string, Intl.DateTimeFormat>()
+const zonedPartFormatters = MutableHashMap.empty<string, Intl.DateTimeFormat>()
 
 function zonedPartFormatter(timeZone: string): Intl.DateTimeFormat {
-  const cached = zonedPartFormatters.get(timeZone)
-  if (cached) {
-    return cached
+  const cached = MutableHashMap.get(zonedPartFormatters, timeZone)
+  if (Option.isSome(cached)) {
+    return cached.value
   }
 
   const formatter = new Intl.DateTimeFormat('en-US', {
@@ -193,7 +243,7 @@ function zonedPartFormatter(timeZone: string): Intl.DateTimeFormat {
     minute: '2-digit',
     second: '2-digit',
   })
-  zonedPartFormatters.set(timeZone, formatter)
+  MutableHashMap.set(zonedPartFormatters, timeZone, formatter)
   return formatter
 }
 
@@ -201,7 +251,12 @@ function zonedPartFormatter(timeZone: string): Intl.DateTimeFormat {
 export function zonedParts(instant: Date, timeZone: string): ZonedParts {
   const parts = zonedPartFormatter(timeZone).formatToParts(instant)
   const read = (type: Intl.DateTimeFormatPartTypes) =>
-    Number(parts.find((part) => part.type === type)?.value ?? '0')
+    Number(
+      Option.match(
+        Arr.findFirst(parts, (part) => part.type === type),
+        { onNone: () => '0', onSome: (part) => part.value },
+      ),
+    )
 
   return {
     year: read('year'),

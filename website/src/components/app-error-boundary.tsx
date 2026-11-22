@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Button } from './ui/button'
 
@@ -19,7 +20,7 @@ export class AppErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Nakafa Prayer failed to render', error, info.componentStack)
+    Effect.runSync(Effect.logError('Nakafa Prayer failed to render', error, info.componentStack))
   }
 
   render() {

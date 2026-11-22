@@ -1,16 +1,24 @@
+import { Schema } from 'effect'
 import type { CivilDate } from '@/lib/prayer'
 
+export const DialMarkerSchema = Schema.Struct({
+  id: Schema.String,
+  fraction: Schema.Finite,
+})
+
 /** Everything a dial variant needs to draw the day. */
-export type DialView = {
+export const DialViewSchema = Schema.Struct({
   /** Whole days since the reference day, so the hand angle never wraps. */
-  dayIndex: number
+  dayIndex: Schema.Finite,
   /** How far through the local day the clock is, from 0 to 1. */
-  fraction: number
+  fraction: Schema.Finite,
   /** The five prayers with their day fractions, in chronological order. */
-  markers: { id: string; fraction: number }[]
+  markers: Schema.Array(DialMarkerSchema),
   /** Index into `markers` of the upcoming prayer, or null when it is tomorrow. */
-  nextIndex: number | null
-}
+  nextIndex: Schema.NullOr(Schema.Finite),
+})
+
+export type DialView = typeof DialViewSchema.Type
 
 /** Whole days since a fixed reference, so a running angle never wraps. */
 const REFERENCE_DAY = Math.floor(Date.UTC(2024, 0, 1) / 86_400_000)
